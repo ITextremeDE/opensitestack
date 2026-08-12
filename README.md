@@ -41,6 +41,14 @@ pnpm check
 pnpm dev
 ```
 
+## Documentation
+
+- [Run the reference application](docs/tutorials/run-reference-application.md)
+- [Configuration reference](docs/reference/configuration.md)
+- [Migrate an existing Next.js website](docs/how-to/migrate-existing-nextjs.md)
+- [Upgrade OpenSiteStack](docs/how-to/upgrade-opensitestack.md)
+- [Basic reference application](examples/basic/README.md)
+
 The example resolves `localhost` to Alpha and `beta.localhost` to Beta. Alpha
 uses group content and an editorial layout; Beta demonstrates a complete site
 override with separate design tokens and control-panel markup. Host resolution,
@@ -81,11 +89,6 @@ Group inheritance is declared per site and content area in that same validated
 registry. A complete site value wins; otherwise the resolver reads one explicit
 group value. There is no field merging, site-to-site fallback, group chaining,
 or request-time selection of an arbitrary inheritance source.
-
-## Planned scope
-
-The initial releases will add migration guides for existing Next.js
-applications.
 
 Operational planning lives in the private OpenProject project. Public technical
 decisions and release-facing documentation live in this repository.

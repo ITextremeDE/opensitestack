@@ -27,4 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validated design-token themes, CSS Custom Property generation, typed
   component slots, and controlled MDX component allowlists without a shared
   visual design.
+- A Diátaxis-oriented integration guide covering source installation, site and
+  group configuration, content, themes, migration, upgrades, and the canonical
+  minimal reference application.
+- Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.

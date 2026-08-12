@@ -10,10 +10,11 @@
   "scripts": {
     "build": "pnpm --filter opensitestack build && pnpm --filter @opensitestack/example-basic build",
     "build:package": "pnpm --filter opensitestack build",
-    "check": "pnpm lint && pnpm test && pnpm build:package && pnpm --filter @opensitestack/example-basic validate:content && pnpm typecheck && pnpm --filter @opensitestack/example-basic build",
+    "check": "pnpm lint && pnpm test && pnpm validate:docs && pnpm build:package && pnpm --filter @opensitestack/example-basic validate:content && pnpm typecheck && pnpm --filter @opensitestack/example-basic build",
     "dev": "pnpm --filter @opensitestack/example-basic dev",
     "lint": "eslint .",
     "test": "pnpm --filter opensitestack test",
+    "validate:docs": "node scripts/validate-docs.mjs",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
