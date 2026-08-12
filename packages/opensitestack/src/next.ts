@@ -59,8 +59,14 @@ export function createNextMetadata<T extends ContentDocument>(
 }
 
 export function createNextRobots(site: SiteDefinition): MetadataRoute.Robots {
+  const disallow = site.robots?.disallow;
+
   return {
-    rules: { userAgent: "*", allow: "/" },
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      ...(disallow && disallow.length > 0 ? { disallow: [...disallow] } : {}),
+    },
     sitemap: `${site.canonicalOrigin}/sitemap.xml`,
     host: site.canonicalOrigin,
   };

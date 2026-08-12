@@ -96,6 +96,30 @@ describe("SiteRegistry", () => {
     } satisfies Partial<SiteRegistryError>));
   });
 
+  it("validates site robots exclusions", () => {
+    for (const disallow of [
+      ["api"],
+      ["/api/", "/api/"],
+      ["/api/\nDisallow: /"],
+    ]) {
+      expect(() =>
+        defineSiteRegistry({
+          sites: [
+            {
+              id: "alpha",
+              name: "Alpha",
+              domain: "alpha.example",
+              canonicalOrigin: "https://alpha.example",
+              metadata,
+              robots: { disallow },
+              theme: "a",
+            },
+          ],
+        }),
+      ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
+    }
+  });
+
   it("rejects unknown group members", () => {
     expect(() =>
       defineSiteRegistry({

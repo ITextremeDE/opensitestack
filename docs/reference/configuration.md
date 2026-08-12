@@ -24,6 +24,7 @@ export const siteRegistry = defineSiteRegistry({
         description: "Alpha website",
         locale: "en",
       },
+      robots: { disallow: ["/api/"] },
       contentAreas: { home: { groupId: "company" } },
       theme: "alpha",
     },
@@ -42,6 +43,7 @@ export const siteRegistry = defineSiteRegistry({
 | `developmentHosts` | no | Additional unique hosts used only for request resolution. |
 | `canonicalOrigin` | yes | HTTPS origin whose hostname exactly matches `domain`; no port, path, query, or fragment. |
 | `metadata` | yes | Non-empty `title`, `description`, and a locale such as `en` or `de-DE`. |
+| `robots` | no | Site-wide robots policy; `disallow` contains unique, root-relative paths such as `/api/`. |
 | `contentAreas` | no | Map from a kebab-case area ID to exactly one `groupId`. |
 | `integrations` | no | Site-level consent, analytics, and form adapter references. |
 | `theme` | yes | Kebab-case theme ID validated by the theme registry. |
@@ -136,6 +138,9 @@ The same resolved site feeds `createNextMetadata`, `createNextRobots`, and
 `createNextSitemap`. Sitemap and content metadata entries must belong to that
 site. `createWebsiteStructuredData`, `createWebPageStructuredData`, and
 `serializeStructuredData` provide safely serialized JSON-LD helpers.
+`createNextRobots` allows crawling by default and includes the site's optional
+validated `robots.disallow` paths without changing its canonical sitemap or
+host declarations.
 
 ## Themes
 
