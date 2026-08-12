@@ -20,15 +20,11 @@ reverted independently.
 
 ## 2. Add the package
 
-After the first public package release, install a deliberate compatible version
-instead of copying source files:
+Install a deliberate compatible version instead of copying source files:
 
 ```bash
-corepack pnpm add opensitestack@^0.1.0
+corepack pnpm add opensitestack@^0.3.0
 ```
-
-Before that release, develop against the OpenSiteStack workspace and its
-reference application. Do not vendor `packages/opensitestack/src` into the site.
 
 Confirm that the consuming repository meets the package peer ranges shown in
 `packages/opensitestack/package.json`.

@@ -5,9 +5,9 @@ clean source checkout. It demonstrates two sites in one Next.js application,
 one shared content group, a complete site override, separate themes, and
 replaceable presentation components.
 
-OpenSiteStack has not published its first npm package yet. Until that release,
-the source workspace is the supported installation path. Do not copy the core
-package into a website repository.
+The reference application lives in the source workspace. Consuming websites
+should install the released `opensitestack` package instead of copying the core
+package into their repository.
 
 ## Prerequisites
 
