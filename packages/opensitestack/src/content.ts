@@ -1,10 +1,10 @@
-import type { ContentSource, ResolvedContent } from "./types";
+import type { ResolvedContent } from "./types";
 import type { SiteRegistry } from "./registry";
 
 export type ContentResolverOptions<T> = {
   readonly registry: SiteRegistry;
   readonly siteId: string;
-  readonly source: ContentSource;
+  readonly contentArea: string;
   readonly readSite: (siteId: string) => Promise<T | null>;
   readonly readGroup: (groupId: string) => Promise<T | null>;
 };
@@ -12,13 +12,11 @@ export type ContentResolverOptions<T> = {
 export async function resolveContent<T>({
   registry,
   siteId,
-  source,
+  contentArea,
   readSite,
   readGroup,
 }: ContentResolverOptions<T>): Promise<ResolvedContent<T> | null> {
-  if (!registry.getSite(siteId)) {
-    throw new Error(`Unknown site: ${siteId}`);
-  }
+  const group = registry.getContentGroup(siteId, contentArea);
 
   const siteValue = await readSite(siteId);
   if (siteValue !== null) {
@@ -28,22 +26,16 @@ export async function resolveContent<T>({
     };
   }
 
-  if (source.kind === "site") {
-    if (source.id !== siteId) {
-      throw new Error(
-        `Site ${siteId} cannot inherit content from site ${source.id}`,
-      );
-    }
+  if (!group) {
     return null;
   }
 
-  registry.assertSiteInGroup(siteId, source.id);
-  const groupValue = await readGroup(source.id);
+  const groupValue = await readGroup(group.id);
 
   return groupValue === null
     ? null
     : {
         value: groupValue,
-        source,
+        source: { kind: "group", id: group.id },
       };
 }

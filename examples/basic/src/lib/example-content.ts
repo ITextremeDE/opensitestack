@@ -22,7 +22,7 @@ export async function getExampleContent(siteId: string) {
   return resolveContent({
     registry: siteRegistry,
     siteId,
-    source: { kind: "group", id: "example-group" },
+    contentArea: "home",
     readSite: async (id) =>
       byReference.get(`sites/${id}/home.mdx`)?.body ?? null,
     readGroup: async (id) =>

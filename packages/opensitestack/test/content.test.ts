@@ -2,10 +2,40 @@ import { describe, expect, it, vi } from "vitest";
 
 import { defineSiteRegistry, resolveContent } from "../src";
 
+const metadata = {
+  title: "Example",
+  description: "Example site",
+  locale: "en",
+};
+
 const registry = defineSiteRegistry({
   sites: [
-    { id: "alpha", name: "Alpha", domain: "alpha.example", canonicalOrigin: "https://alpha.example", metadata: { title: "Alpha", description: "Alpha site", locale: "en" }, theme: "alpha" },
-    { id: "beta", name: "Beta", domain: "beta.example", canonicalOrigin: "https://beta.example", metadata: { title: "Beta", description: "Beta site", locale: "en" }, theme: "beta" },
+    {
+      id: "alpha",
+      name: "Alpha",
+      domain: "alpha.example",
+      canonicalOrigin: "https://alpha.example",
+      metadata,
+      contentAreas: { home: { groupId: "shared" } },
+      theme: "alpha",
+    },
+    {
+      id: "beta",
+      name: "Beta",
+      domain: "beta.example",
+      canonicalOrigin: "https://beta.example",
+      metadata,
+      contentAreas: { home: { groupId: "shared" } },
+      theme: "beta",
+    },
+    {
+      id: "standalone",
+      name: "Standalone",
+      domain: "standalone.example",
+      canonicalOrigin: "https://standalone.example",
+      metadata,
+      theme: "standalone",
+    },
   ],
   groups: [
     { id: "shared", name: "Shared", siteIds: ["alpha", "beta"] },
@@ -13,67 +43,77 @@ const registry = defineSiteRegistry({
 });
 
 describe("resolveContent", () => {
-  it("prefers a complete site override", async () => {
-    const readGroup = vi.fn(async () => "group");
+  it("prefers a complete site override without reading the group", async () => {
+    const readGroup = vi.fn(async () => ({ title: "group", legal: "group" }));
     const result = await resolveContent({
       registry,
       siteId: "alpha",
-      source: { kind: "group", id: "shared" },
-      readSite: async () => "site",
+      contentArea: "home",
+      readSite: async () => ({ title: "site" }),
       readGroup,
     });
 
     expect(result).toEqual({
-      value: "site",
+      value: { title: "site" },
       source: { kind: "site", id: "alpha" },
     });
     expect(readGroup).not.toHaveBeenCalled();
   });
 
-  it("falls back to exactly one explicit group source", async () => {
+  it("falls back to the one group configured for the content area", async () => {
+    const readGroup = vi.fn(async () => "group");
     const result = await resolveContent({
       registry,
       siteId: "alpha",
-      source: { kind: "group", id: "shared" },
+      contentArea: "home",
       readSite: async () => null,
-      readGroup: async () => "group",
+      readGroup,
     });
 
     expect(result).toEqual({
       value: "group",
       source: { kind: "group", id: "shared" },
     });
+    expect(readGroup).toHaveBeenCalledExactlyOnceWith("shared");
   });
 
-  it("rejects inheritance from another site", async () => {
+  it("returns null when the configured group has no value", async () => {
     await expect(
       resolveContent({
         registry,
-        siteId: "alpha",
-        source: { kind: "site", id: "beta" },
+        siteId: "beta",
+        contentArea: "home",
         readSite: async () => null,
         readGroup: async () => null,
       }),
-    ).rejects.toThrow("cannot inherit content from site beta");
+    ).resolves.toBeNull();
   });
 
-  it("rejects a group source outside the site's membership", async () => {
-    const isolatedRegistry = defineSiteRegistry({
-      sites: [
-        { id: "alpha", name: "Alpha", domain: "alpha.example", canonicalOrigin: "https://alpha.example", metadata: { title: "Alpha", description: "Alpha site", locale: "en" }, theme: "a" },
-        { id: "beta", name: "Beta", domain: "beta.example", canonicalOrigin: "https://beta.example", metadata: { title: "Beta", description: "Beta site", locale: "en" }, theme: "b" },
-      ],
-      groups: [{ id: "alpha-group", name: "Alpha", siteIds: ["alpha"] }],
-    });
-
+  it("returns null without reading a group when no inheritance is configured", async () => {
+    const readGroup = vi.fn(async () => "unexpected");
     await expect(
       resolveContent({
-        registry: isolatedRegistry,
-        siteId: "beta",
-        source: { kind: "group", id: "alpha-group" },
+        registry,
+        siteId: "standalone",
+        contentArea: "home",
         readSite: async () => null,
-        readGroup: async () => "group",
+        readGroup,
       }),
-    ).rejects.toThrow("is not a member of group alpha-group");
+    ).resolves.toBeNull();
+    expect(readGroup).not.toHaveBeenCalled();
+  });
+
+  it("rejects an unknown site before reading any source", async () => {
+    const readSite = vi.fn(async () => null);
+    await expect(
+      resolveContent({
+        registry,
+        siteId: "missing",
+        contentArea: "home",
+        readSite,
+        readGroup: async () => null,
+      }),
+    ).rejects.toMatchObject({ code: "UNKNOWN_SITE" });
+    expect(readSite).not.toHaveBeenCalled();
   });
 });

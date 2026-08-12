@@ -106,4 +106,93 @@ describe("SiteRegistry", () => {
       }),
     ).toThrow("references unknown site missing");
   });
+
+  it("resolves one explicit content group for a site area", () => {
+    const registry = defineSiteRegistry({
+      sites: [
+        {
+          id: "alpha",
+          name: "Alpha",
+          domain: "alpha.example",
+          canonicalOrigin: "https://alpha.example",
+          metadata,
+          contentAreas: { legal: { groupId: "shared" } },
+          theme: "a",
+        },
+      ],
+      groups: [{ id: "shared", name: "Shared", siteIds: ["alpha"] }],
+    });
+
+    expect(registry.getContentGroup("alpha", "legal")?.id).toBe("shared");
+    expect(registry.getContentGroup("alpha", "news")).toBeNull();
+  });
+
+  it("rejects a content source that references an unknown group", () => {
+    expect(() =>
+      defineSiteRegistry({
+        sites: [
+          {
+            id: "alpha",
+            name: "Alpha",
+            domain: "alpha.example",
+            canonicalOrigin: "https://alpha.example",
+            metadata,
+            contentAreas: { legal: { groupId: "missing" } },
+            theme: "a",
+          },
+        ],
+      }),
+    ).toThrow(expect.objectContaining({ code: "UNKNOWN_CONTENT_GROUP" }));
+  });
+
+  it("rejects content inheritance without explicit group membership", () => {
+    expect(() =>
+      defineSiteRegistry({
+        sites: [
+          {
+            id: "alpha",
+            name: "Alpha",
+            domain: "alpha.example",
+            canonicalOrigin: "https://alpha.example",
+            metadata,
+            contentAreas: { legal: { groupId: "beta-group" } },
+            theme: "a",
+          },
+          {
+            id: "beta",
+            name: "Beta",
+            domain: "beta.example",
+            canonicalOrigin: "https://beta.example",
+            metadata,
+            theme: "b",
+          },
+        ],
+        groups: [{ id: "beta-group", name: "Beta", siteIds: ["beta"] }],
+      }),
+    ).toThrow(expect.objectContaining({ code: "CONTENT_GROUP_MEMBERSHIP" }));
+  });
+
+  it("rejects multiple or site-to-site sources by schema", () => {
+    for (const invalidSource of [
+      { groupIds: ["one", "two"] },
+      { groupId: "one", fallbackGroupId: "two" },
+      { siteId: "another-site" },
+    ]) {
+      expect(() =>
+        defineSiteRegistry({
+          sites: [
+            {
+              id: "alpha",
+              name: "Alpha",
+              domain: "alpha.example",
+              canonicalOrigin: "https://alpha.example",
+              metadata,
+              contentAreas: { legal: invalidSource } as never,
+              theme: "a",
+            },
+          ],
+        }),
+      ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
+    }
+  });
 });

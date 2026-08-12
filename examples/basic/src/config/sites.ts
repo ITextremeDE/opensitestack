@@ -13,6 +13,9 @@ export const siteRegistry = defineSiteRegistry({
         description: "Alpha uses the shared example-group content.",
         locale: "en",
       },
+      contentAreas: {
+        home: { groupId: "example-group" },
+      },
       theme: "alpha",
     },
     {
@@ -25,6 +28,9 @@ export const siteRegistry = defineSiteRegistry({
         title: "Beta Example",
         description: "Beta overrides the shared example-group content.",
         locale: "en",
+      },
+      contentAreas: {
+        home: { groupId: "example-group" },
       },
       theme: "beta",
     },

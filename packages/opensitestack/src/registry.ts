@@ -33,6 +33,10 @@ const metadataSchema = z
   })
   .strict();
 
+const contentInheritanceSchema = z
+  .object({ groupId: identifierSchema })
+  .strict();
+
 const siteSchema = z
   .object({
     id: identifierSchema,
@@ -41,6 +45,10 @@ const siteSchema = z
     developmentHosts: z.array(hostSchema).readonly().optional(),
     canonicalOrigin: z.url().trim(),
     metadata: metadataSchema,
+    contentAreas: z
+      .record(identifierSchema, contentInheritanceSchema)
+      .readonly()
+      .optional(),
     theme: identifierSchema,
   })
   .strict();
@@ -94,7 +102,11 @@ export type SiteRegistryErrorCode =
   | "INVALID_CANONICAL_ORIGIN"
   | "DUPLICATE_GROUP_ID"
   | "UNKNOWN_GROUP_SITE"
-  | "DUPLICATE_GROUP_SITE";
+  | "DUPLICATE_GROUP_SITE"
+  | "UNKNOWN_CONTENT_GROUP"
+  | "CONTENT_GROUP_MEMBERSHIP"
+  | "UNKNOWN_SITE"
+  | "UNKNOWN_GROUP";
 
 export class SiteRegistryError extends Error {
   constructor(
@@ -192,6 +204,26 @@ export class SiteRegistry {
       groupsById.set(group.id, group);
     }
 
+    for (const site of parsed.sites) {
+      for (const [areaId, inheritance] of Object.entries(
+        site.contentAreas ?? {},
+      )) {
+        const group = groupsById.get(inheritance.groupId);
+        if (!group) {
+          throw new SiteRegistryError(
+            "UNKNOWN_CONTENT_GROUP",
+            `Content area ${areaId} for site ${site.id} references unknown group ${inheritance.groupId}`,
+          );
+        }
+        if (!group.siteIds.includes(site.id)) {
+          throw new SiteRegistryError(
+            "CONTENT_GROUP_MEMBERSHIP",
+            `Site ${site.id} cannot use group ${group.id} for content area ${areaId} without membership`,
+          );
+        }
+      }
+    }
+
     this.sites = parsed.sites;
     this.groups = parsed.groups ?? [];
     this.#sitesById = sitesById;
@@ -212,19 +244,35 @@ export class SiteRegistry {
     return this.#groupsById.get(id) ?? null;
   }
 
+  getContentGroup(siteId: string, areaId: string): SiteGroupDefinition | null {
+    const site = this.getSite(siteId);
+    if (!site) {
+      throw new SiteRegistryError("UNKNOWN_SITE", `Unknown site: ${siteId}`);
+    }
+
+    const inheritance = site.contentAreas?.[areaId];
+    return inheritance ? this.getGroup(inheritance.groupId) : null;
+  }
+
   assertSiteInGroup(siteId: string, groupId: string): void {
     const site = this.getSite(siteId);
     if (!site) {
-      throw new Error(`Unknown site: ${siteId}`);
+      throw new SiteRegistryError("UNKNOWN_SITE", `Unknown site: ${siteId}`);
     }
 
     const group = this.getGroup(groupId);
     if (!group) {
-      throw new Error(`Unknown site group: ${groupId}`);
+      throw new SiteRegistryError(
+        "UNKNOWN_GROUP",
+        `Unknown site group: ${groupId}`,
+      );
     }
 
     if (!group.siteIds.includes(siteId)) {
-      throw new Error(`Site ${siteId} is not a member of group ${groupId}`);
+      throw new SiteRegistryError(
+        "CONTENT_GROUP_MEMBERSHIP",
+        `Site ${siteId} is not a member of group ${groupId}`,
+      );
     }
   }
 }

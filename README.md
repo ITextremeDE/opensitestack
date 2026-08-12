@@ -56,6 +56,11 @@ uses them. The example's Markdown and MDX files are validated explicitly during
 `pnpm check`, so invalid lifecycle values, metadata, duplicate IDs, or duplicate
 slugs fail before a production build can be published.
 
+Group inheritance is declared per site and content area in that same validated
+registry. A complete site value wins; otherwise the resolver reads one explicit
+group value. There is no field merging, site-to-site fallback, group chaining,
+or request-time selection of an arbitrary inheritance source.
+
 ## Planned scope
 
 The initial releases will add typed Markdown/MDX content, SEO outputs, consent,
