@@ -44,6 +44,12 @@ pnpm dev
 The example resolves `localhost` to Alpha and `beta.localhost` to Beta. Alpha
 uses group content; Beta demonstrates a complete site override.
 
+Each site declares one normalized production domain, optional development
+hosts, an HTTPS canonical origin, and typed title, description, and locale
+metadata. Registry construction rejects invalid definitions and host collisions;
+request lookup returns `null` for malformed or unknown hosts so the Next.js
+adapter can respond with `notFound()` without selecting a fallback brand.
+
 ## Planned scope
 
 The initial releases will add typed Markdown/MDX content, SEO outputs, consent,

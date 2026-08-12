@@ -16,8 +16,22 @@ const hostSchema = z
   .string()
   .trim()
   .min(1)
-  .transform((value) => normalizeHost(value))
-  .pipe(z.string().min(1));
+  .transform((value, context) => {
+    const host = normalizeHost(value);
+    if (!host) {
+      context.addIssue({ code: "custom", message: "Invalid host" });
+      return z.NEVER;
+    }
+    return host;
+  });
+
+const metadataSchema = z
+  .object({
+    title: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+    locale: z.string().trim().min(2).regex(/^[a-z]{2,3}(?:-[A-Z]{2})?$/),
+  })
+  .strict();
 
 const siteSchema = z
   .object({
@@ -25,6 +39,8 @@ const siteSchema = z
     name: z.string().trim().min(1),
     domain: hostSchema,
     developmentHosts: z.array(hostSchema).readonly().optional(),
+    canonicalOrigin: z.url().trim(),
+    metadata: metadataSchema,
     theme: identifierSchema,
   })
   .strict();
@@ -49,19 +65,46 @@ export function normalizeHost(value: string | null | undefined): string | null {
     return null;
   }
 
-  const firstHost = value.split(",", 1)[0]?.trim().toLowerCase();
-  if (!firstHost) {
+  const rawHost = value.trim().toLowerCase();
+  if (!rawHost || rawHost.includes(",")) {
     return null;
   }
 
-  if (firstHost.startsWith("[")) {
-    const closingBracket = firstHost.indexOf("]");
-    return closingBracket === -1
-      ? firstHost
-      : firstHost.slice(0, closingBracket + 1);
+  try {
+    const parsed = new URL(`http://${rawHost}`);
+    if (
+      parsed.username ||
+      parsed.password ||
+      parsed.pathname !== "/" ||
+      parsed.search ||
+      parsed.hash
+    ) {
+      return null;
+    }
+    return parsed.hostname.replace(/\.$/, "");
+  } catch {
+    return null;
   }
+}
 
-  return firstHost.replace(/:\d+$/, "").replace(/\.$/, "");
+export type SiteRegistryErrorCode =
+  | "INVALID_DEFINITION"
+  | "DUPLICATE_SITE_ID"
+  | "DUPLICATE_HOST"
+  | "INVALID_CANONICAL_ORIGIN"
+  | "DUPLICATE_GROUP_ID"
+  | "UNKNOWN_GROUP_SITE"
+  | "DUPLICATE_GROUP_SITE";
+
+export class SiteRegistryError extends Error {
+  constructor(
+    readonly code: SiteRegistryErrorCode,
+    message: string,
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
+    this.name = "SiteRegistryError";
+  }
 }
 
 export class SiteRegistry {
@@ -73,20 +116,50 @@ export class SiteRegistry {
   readonly #groupsById: ReadonlyMap<string, SiteGroupDefinition>;
 
   constructor(definition: SiteRegistryDefinition) {
-    const parsed = registrySchema.parse(definition);
+    const result = registrySchema.safeParse(definition);
+    if (!result.success) {
+      throw new SiteRegistryError(
+        "INVALID_DEFINITION",
+        `Invalid site registry: ${z.prettifyError(result.error)}`,
+        { cause: result.error },
+      );
+    }
+    const parsed = result.data;
     const sitesById = new Map<string, SiteDefinition>();
     const sitesByHost = new Map<string, SiteDefinition>();
 
     for (const site of parsed.sites) {
       if (sitesById.has(site.id)) {
-        throw new Error(`Duplicate site id: ${site.id}`);
+        throw new SiteRegistryError(
+          "DUPLICATE_SITE_ID",
+          `Duplicate site id: ${site.id}`,
+        );
+      }
+
+      const canonicalUrl = new URL(site.canonicalOrigin);
+      const canonicalHost = normalizeHost(canonicalUrl.host);
+      if (
+        canonicalUrl.protocol !== "https:" ||
+        canonicalUrl.username ||
+        canonicalUrl.password ||
+        canonicalUrl.port ||
+        canonicalUrl.pathname !== "/" ||
+        canonicalUrl.search ||
+        canonicalUrl.hash ||
+        canonicalHost !== site.domain
+      ) {
+        throw new SiteRegistryError(
+          "INVALID_CANONICAL_ORIGIN",
+          `Canonical origin for ${site.id} must be the HTTPS origin of ${site.domain}`,
+        );
       }
       sitesById.set(site.id, site);
 
       for (const host of [site.domain, ...(site.developmentHosts ?? [])]) {
         const existing = sitesByHost.get(host);
         if (existing) {
-          throw new Error(
+          throw new SiteRegistryError(
+            "DUPLICATE_HOST",
             `Host ${host} is assigned to both ${existing.id} and ${site.id}`,
           );
         }
@@ -97,15 +170,24 @@ export class SiteRegistry {
     const groupsById = new Map<string, SiteGroupDefinition>();
     for (const group of parsed.groups ?? []) {
       if (groupsById.has(group.id)) {
-        throw new Error(`Duplicate site group id: ${group.id}`);
+        throw new SiteRegistryError(
+          "DUPLICATE_GROUP_ID",
+          `Duplicate site group id: ${group.id}`,
+        );
       }
       for (const siteId of group.siteIds) {
         if (!sitesById.has(siteId)) {
-          throw new Error(`Group ${group.id} references unknown site ${siteId}`);
+          throw new SiteRegistryError(
+            "UNKNOWN_GROUP_SITE",
+            `Group ${group.id} references unknown site ${siteId}`,
+          );
         }
       }
       if (new Set(group.siteIds).size !== group.siteIds.length) {
-        throw new Error(`Group ${group.id} contains duplicate site ids`);
+        throw new SiteRegistryError(
+          "DUPLICATE_GROUP_SITE",
+          `Group ${group.id} contains duplicate site ids`,
+        );
       }
       groupsById.set(group.id, group);
     }

@@ -7,6 +7,12 @@ export const siteRegistry = defineSiteRegistry({
       name: "Alpha Example",
       domain: "alpha.example",
       developmentHosts: ["localhost", "127.0.0.1", "[::1]"],
+      canonicalOrigin: "https://alpha.example",
+      metadata: {
+        title: "Alpha Example",
+        description: "Alpha uses the shared example-group content.",
+        locale: "en",
+      },
       theme: "alpha",
     },
     {
@@ -14,6 +20,12 @@ export const siteRegistry = defineSiteRegistry({
       name: "Beta Example",
       domain: "beta.example",
       developmentHosts: ["beta.localhost"],
+      canonicalOrigin: "https://beta.example",
+      metadata: {
+        title: "Beta Example",
+        description: "Beta overrides the shared example-group content.",
+        locale: "en",
+      },
       theme: "beta",
     },
   ],
