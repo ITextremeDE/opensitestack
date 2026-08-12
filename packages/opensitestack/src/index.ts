@@ -21,6 +21,21 @@ export {
   SiteRegistryError,
   type SiteRegistryErrorCode,
 } from "./registry";
+export {
+  createCanonicalUrl,
+  createPublicationEntries,
+  projectPublicationEntries,
+  type PublicationCandidate,
+  type PublicationCollectionOptions,
+  type PublicationEntry,
+} from "./publication";
+export {
+  assertEntryBelongsToSite,
+  createWebPageStructuredData,
+  createWebsiteStructuredData,
+  serializeStructuredData,
+  type StructuredData,
+} from "./seo";
 export type {
   ContentInheritanceDefinition,
   ContentSource,

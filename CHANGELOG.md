@@ -18,4 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build-time validation of the example application's local content collection.
 - Registry-bound, single-level content-area inheritance with complete site
   overrides, explicit group membership checks, and deterministic provenance.
+- A single publication gate for due, published, indexable content; same-origin
+  canonicals; host-specific Next.js metadata, robots and sitemap adapters;
+  safe JSON-LD helpers; and shared search/feed projection points.
 - Initial architecture, contribution, security, and release documentation.

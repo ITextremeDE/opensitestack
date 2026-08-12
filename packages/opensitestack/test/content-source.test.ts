@@ -22,6 +22,7 @@ const validDocument = {
   title: "Welcome",
   summary: "A valid content document.",
   status: "published",
+  indexable: true,
   publishedAt: "2026-08-12T12:00:00+02:00",
   tags: ["example"],
   body: "# Welcome",
@@ -32,6 +33,7 @@ describe("content schemas", () => {
     expect(contentDocumentSchema.parse(validDocument)).toMatchObject({
       status: "published",
       tags: ["example"],
+      indexable: true,
     });
     expect(() =>
       contentDocumentSchema.parse({ ...validDocument, publishedAt: undefined }),
@@ -39,6 +41,16 @@ describe("content schemas", () => {
     expect(() =>
       contentDocumentSchema.parse({ ...validDocument, status: "live" }),
     ).toThrow();
+  });
+
+  it("treats content as indexable unless explicitly disabled", () => {
+    const withoutIndexable = { ...validDocument };
+    delete (withoutIndexable as Partial<typeof validDocument>).indexable;
+
+    expect(contentDocumentSchema.parse(withoutIndexable).indexable).toBe(true);
+    expect(
+      contentDocumentSchema.parse({ ...validDocument, indexable: false }).indexable,
+    ).toBe(false);
   });
 
   it("extends the base contract with site-specific fields", () => {

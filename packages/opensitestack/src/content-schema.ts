@@ -27,6 +27,7 @@ const contentBaseShape = {
   title: z.string().trim().min(1),
   summary: z.string().trim().min(1),
   status: contentStatusSchema,
+  indexable: z.boolean().default(true),
   publishedAt: z.iso.datetime({ offset: true }).optional(),
   updatedAt: z.iso.datetime({ offset: true }).optional(),
   tags: z.array(contentIdentifierSchema).readonly().default([]),

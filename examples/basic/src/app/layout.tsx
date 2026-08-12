@@ -1,19 +1,18 @@
-import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+import {
+  createWebsiteStructuredData,
+  serializeStructuredData,
+} from "opensitestack";
+import { createNextMetadata } from "opensitestack/next";
 
 import { getCurrentSite } from "@/lib/current-site";
 
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata() {
   const site = await getCurrentSite();
-
-  return {
-    metadataBase: new URL(site.canonicalOrigin),
-    title: site.metadata.title,
-    description: site.metadata.description,
-    alternates: { canonical: "/" },
-  };
+  return createNextMetadata(site);
 }
 
 export default async function RootLayout({
@@ -23,7 +22,15 @@ export default async function RootLayout({
 
   return (
     <html lang={site.metadata.locale}>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeStructuredData(createWebsiteStructuredData(site)),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
