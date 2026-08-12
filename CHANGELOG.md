@@ -11,4 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial pnpm workspace with the `opensitestack` package and a Next.js example.
 - Typed site registry, host resolution, and single-level content fallback.
+- Strict site metadata and canonical-origin validation, normalized development
+  hosts, stable registry error codes, and fail-closed unknown-host resolution.
 - Initial architecture, contribution, security, and release documentation.

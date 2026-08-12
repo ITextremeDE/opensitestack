@@ -1,8 +1,16 @@
+export type SiteMetadata = {
+  readonly title: string;
+  readonly description: string;
+  readonly locale: string;
+};
+
 export type SiteDefinition = {
   readonly id: string;
   readonly name: string;
   readonly domain: string;
   readonly developmentHosts?: readonly string[];
+  readonly canonicalOrigin: string;
+  readonly metadata: SiteMetadata;
   readonly theme: string;
 };
 

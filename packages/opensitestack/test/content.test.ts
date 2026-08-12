@@ -4,8 +4,8 @@ import { defineSiteRegistry, resolveContent } from "../src";
 
 const registry = defineSiteRegistry({
   sites: [
-    { id: "alpha", name: "Alpha", domain: "alpha.example", theme: "alpha" },
-    { id: "beta", name: "Beta", domain: "beta.example", theme: "beta" },
+    { id: "alpha", name: "Alpha", domain: "alpha.example", canonicalOrigin: "https://alpha.example", metadata: { title: "Alpha", description: "Alpha site", locale: "en" }, theme: "alpha" },
+    { id: "beta", name: "Beta", domain: "beta.example", canonicalOrigin: "https://beta.example", metadata: { title: "Beta", description: "Beta site", locale: "en" }, theme: "beta" },
   ],
   groups: [
     { id: "shared", name: "Shared", siteIds: ["alpha", "beta"] },
@@ -60,8 +60,8 @@ describe("resolveContent", () => {
   it("rejects a group source outside the site's membership", async () => {
     const isolatedRegistry = defineSiteRegistry({
       sites: [
-        { id: "alpha", name: "Alpha", domain: "alpha.example", theme: "a" },
-        { id: "beta", name: "Beta", domain: "beta.example", theme: "b" },
+        { id: "alpha", name: "Alpha", domain: "alpha.example", canonicalOrigin: "https://alpha.example", metadata: { title: "Alpha", description: "Alpha site", locale: "en" }, theme: "a" },
+        { id: "beta", name: "Beta", domain: "beta.example", canonicalOrigin: "https://beta.example", metadata: { title: "Beta", description: "Beta site", locale: "en" }, theme: "b" },
       ],
       groups: [{ id: "alpha-group", name: "Alpha", siteIds: ["alpha"] }],
     });

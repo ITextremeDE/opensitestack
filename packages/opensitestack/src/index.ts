@@ -3,6 +3,8 @@ export {
   defineSiteRegistry,
   normalizeHost,
   SiteRegistry,
+  SiteRegistryError,
+  type SiteRegistryErrorCode,
 } from "./registry";
 export type {
   ContentSource,
@@ -11,5 +13,6 @@ export type {
   SiteContentSource,
   SiteDefinition,
   SiteGroupDefinition,
+  SiteMetadata,
   SiteRegistryDefinition,
 } from "./types";
