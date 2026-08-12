@@ -31,7 +31,7 @@ const contentBaseShape = {
   publishedAt: z.iso.datetime({ offset: true }).optional(),
   updatedAt: z.iso.datetime({ offset: true }).optional(),
   tags: z.array(contentIdentifierSchema).readonly().default([]),
-  body: z.string().trim().min(1),
+  body: z.string(),
 } satisfies z.ZodRawShape;
 
 type ContentExtensionShape = {

@@ -53,6 +53,12 @@ describe("content schemas", () => {
     ).toBe(false);
   });
 
+  it("accepts metadata-only route documents without a body", () => {
+    expect(
+      contentDocumentSchema.parse({ ...validDocument, body: "" }),
+    ).toMatchObject({ body: "", status: "published" });
+  });
+
   it("extends the base contract with site-specific fields", () => {
     const articleSchema = defineContentSchema({
       author: z.string().trim().min(1),

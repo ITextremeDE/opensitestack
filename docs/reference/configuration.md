@@ -74,8 +74,8 @@ hard-coded platform requirement.
 
 ## Content documents
 
-`contentDocumentSchema` validates the following frontmatter plus a non-empty
-Markdown or MDX body:
+`contentDocumentSchema` validates the following frontmatter plus a Markdown or
+MDX body. The body may be empty for metadata-only routes:
 
 ```yaml
 ---
@@ -104,7 +104,7 @@ Page body.
 | `publishedAt` | no | ISO 8601 timestamp with offset. Omit for timeless content that should publish immediately. |
 | `updatedAt` | no | ISO 8601 timestamp with offset. |
 | `tags` | no | Array of kebab-case identifiers, defaults to an empty array. |
-| `body` | yes | Non-empty document body supplied by the source adapter. |
+| `body` | yes | Document body supplied by the source adapter; may be empty for a metadata-only route rendered from components or structured fields. |
 
 `createPublicationEntries` publishes only `published`, indexable content. A
 missing `publishedAt` is immediately eligible; a future timestamp schedules the
@@ -113,7 +113,9 @@ feeds until due. Drafts, reviews, and archived records always stay out.
 
 The Node-only `opensitestack/markdown` entry point recursively reads `.md` and
 `.mdx` files and ignores symbolic links. `defineContentSchema` can add strict
-site-owned fields but cannot replace platform fields.
+site-owned fields but cannot replace platform fields. A source-specific schema
+should require a non-empty body when empty documents are not meaningful for
+that collection.
 
 ## Next.js request and SEO adapters
 
