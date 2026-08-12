@@ -21,6 +21,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./markdown": {
+      "types": "./dist/markdown.d.ts",
+      "import": "./dist/markdown.js"
+    },
     "./next": {
       "types": "./dist/next.d.ts",
       "import": "./dist/next.js"
@@ -32,6 +36,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "zod": "^4.4.3"
   },
   "peerDependencies": {

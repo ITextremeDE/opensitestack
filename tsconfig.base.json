@@ -10,6 +10,7 @@
     "noEmit": true,
     "paths": {
       "opensitestack": ["./packages/opensitestack/src/index.ts"],
+      "opensitestack/markdown": ["./packages/opensitestack/src/markdown.ts"],
       "opensitestack/next": ["./packages/opensitestack/src/next.ts"]
     },
     "resolveJsonModule": true,
