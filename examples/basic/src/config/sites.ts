@@ -1,4 +1,4 @@
-import { defineSiteRegistry } from "opensitestack";
+import { defineSiteRegistry, defineThemeRegistry } from "opensitestack";
 
 export const siteRegistry = defineSiteRegistry({
   sites: [
@@ -43,3 +43,41 @@ export const siteRegistry = defineSiteRegistry({
     },
   ],
 });
+
+export const themeRegistry = defineThemeRegistry(
+  {
+    themes: [
+      {
+        id: "alpha",
+        tokens: {
+          "color-background": "#f4efe4",
+          "color-surface": "#fffaf0",
+          "color-text": "#18251f",
+          "color-muted": "#657269",
+          "color-accent": "#b34b2e",
+          "font-body": "ui-serif, Georgia, serif",
+          "font-display": "ui-serif, Georgia, serif",
+          "content-width": "48rem",
+          "page-space": "clamp(1.5rem, 6vw, 5rem)",
+          "shape-radius": "0.25rem",
+        },
+      },
+      {
+        id: "beta",
+        tokens: {
+          "color-background": "#07111f",
+          "color-surface": "#0d2034",
+          "color-text": "#e7f7ff",
+          "color-muted": "#8cb3c7",
+          "color-accent": "#42e8c6",
+          "font-body": "ui-monospace, SFMono-Regular, monospace",
+          "font-display": "ui-sans-serif, system-ui, sans-serif",
+          "content-width": "72rem",
+          "page-space": "clamp(1rem, 4vw, 3rem)",
+          "shape-radius": "1.5rem",
+        },
+      },
+    ],
+  },
+  siteRegistry.sites,
+);

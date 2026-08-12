@@ -42,7 +42,9 @@ pnpm dev
 ```
 
 The example resolves `localhost` to Alpha and `beta.localhost` to Beta. Alpha
-uses group content; Beta demonstrates a complete site override.
+uses group content and an editorial layout; Beta demonstrates a complete site
+override with separate design tokens and control-panel markup. Host resolution,
+content loading, SEO, and publication logic remain shared.
 
 Each site declares one normalized production domain, optional development
 hosts, an HTTPS canonical origin, and typed title, description, and locale
@@ -69,6 +71,12 @@ adapters validate untrusted input on the server before provider submission.
 Provider packages, credentials, consent UI, and abuse controls stay in each
 consuming site repository.
 
+Themes are site-owned token maps exposed as CSS Custom Properties. Typed
+component slots can replace complete presentation components without wrapping
+them or copying route logic, while controlled MDX component maps accept only
+explicitly registered names. OpenSiteStack deliberately defines no shared
+Corporate Design.
+
 Group inheritance is declared per site and content area in that same validated
 registry. A complete site value wins; otherwise the resolver reads one explicit
 group value. There is no field merging, site-to-site fallback, group chaining,
@@ -76,8 +84,8 @@ or request-time selection of an arbitrary inheritance source.
 
 ## Planned scope
 
-The initial releases will add theme and component extension points and migration
-guides for existing Next.js applications.
+The initial releases will add migration guides for existing Next.js
+applications.
 
 Operational planning lives in the private OpenProject project. Public technical
 decisions and release-facing documentation live in this repository.

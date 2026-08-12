@@ -51,6 +51,25 @@ export {
   serializeStructuredData,
   type StructuredData,
 } from "./seo";
+export {
+  createThemeStyle,
+  defineThemeRegistry,
+  ThemeRegistry,
+  ThemeRegistryError,
+  type DesignTokenValue,
+  type ThemeDefinition,
+  type ThemeRegistryDefinition,
+  type ThemeRegistryErrorCode,
+  type ThemeStyle,
+} from "./theme";
+export {
+  ComponentRegistryError,
+  defineComponentSlots,
+  defineMdxComponents,
+  type ComponentMap,
+  type ComponentRegistry,
+  type ComponentRegistryErrorCode,
+} from "./ui";
 export type {
   AnalyticsIntegrationDefinition,
   ConsentIntegrationDefinition,
