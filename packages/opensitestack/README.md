@@ -17,7 +17,8 @@ resolve to `null`.
 ## Content sources
 
 `contentDocumentSchema` defines IDs, route slugs, title, summary, lifecycle
-status, publication timestamps, tags, and body. `defineContentSchema` adds
+status, indexability, publication timestamps, tags, and body. Content is
+indexable by default and may opt out explicitly. `defineContentSchema` adds
 project-specific fields without allowing replacement of those base fields.
 
 A `ContentSourceAdapter` returns raw values plus stable source references.
@@ -54,3 +55,39 @@ const registry = defineSiteRegistry({
   ],
 });
 ```
+
+## Publication and SEO
+
+`createPublicationEntries` is the canonical publication gate. It accepts route
+candidates for one resolved site and keeps only documents that are `published`,
+indexable, and whose `publishedAt` timestamp is due. It creates same-origin
+canonical URLs and rejects duplicate routes. Sitemap, search, feed, and
+page-level structured-data adapters consume only these entries, so they cannot
+silently disagree about publishability.
+
+```ts
+const entries = createPublicationEntries({
+  site,
+  candidates: documents.map((content) => ({
+    content,
+    pathname: `/articles/${content.slug}`,
+  })),
+});
+
+const searchDocuments = projectPublicationEntries(entries, (entry) => ({
+  id: entry.content.id,
+  title: entry.content.title,
+  url: entry.canonicalUrl,
+}));
+```
+
+The `opensitestack/next` entry point exposes `createNextMetadata`,
+`createNextRobots`, and `createNextSitemap`. All use the already resolved site;
+content metadata and sitemap rows require a matching `PublicationEntry`.
+`createWebsiteStructuredData` and `createWebPageStructuredData` provide
+Schema.org objects, while `serializeStructuredData` escapes HTML delimiters
+before rendering JSON-LD in a native `<script type="application/ld+json">`.
+
+Search and feed providers remain application choices. They should use
+`projectPublicationEntries` to transform the same filtered entries into their
+provider-specific records instead of implementing another publication filter.

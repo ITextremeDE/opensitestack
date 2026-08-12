@@ -9,7 +9,7 @@ export default async function Home() {
     <main data-theme={site.theme}>
       <p className="eyebrow">OpenSiteStack example</p>
       <h1>{site.name}</h1>
-      <p>{content?.value}</p>
+      <p>{content?.value.body}</p>
       <dl>
         <div>
           <dt>Site</dt>

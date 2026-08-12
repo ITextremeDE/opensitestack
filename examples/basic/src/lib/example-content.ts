@@ -1,6 +1,11 @@
 import { join } from "node:path";
 
-import { contentDocumentSchema, resolveContent, validateContentSource } from "opensitestack";
+import {
+  contentDocumentSchema,
+  createPublicationEntries,
+  resolveContent,
+  validateContentSource,
+} from "opensitestack";
 import { createMarkdownContentSource } from "opensitestack/markdown";
 
 import { siteRegistry } from "@/config/sites";
@@ -24,8 +29,21 @@ export async function getExampleContent(siteId: string) {
     siteId,
     contentArea: "home",
     readSite: async (id) =>
-      byReference.get(`sites/${id}/home.mdx`)?.body ?? null,
+      byReference.get(`sites/${id}/home.mdx`) ?? null,
     readGroup: async (id) =>
-      byReference.get(`groups/${id}/home.md`)?.body ?? null,
+      byReference.get(`groups/${id}/home.md`) ?? null,
+  });
+}
+
+export async function getExamplePublicationEntries(siteId: string) {
+  const site = siteRegistry.getSite(siteId);
+  if (!site) {
+    return [];
+  }
+
+  const content = await getExampleContent(siteId);
+  return createPublicationEntries({
+    site,
+    candidates: content ? [{ content: content.value, pathname: "/" }] : [],
   });
 }

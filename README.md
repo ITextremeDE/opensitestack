@@ -56,6 +56,12 @@ uses them. The example's Markdown and MDX files are validated explicitly during
 `pnpm check`, so invalid lifecycle values, metadata, duplicate IDs, or duplicate
 slugs fail before a production build can be published.
 
+Publication follows one additional shared gate: only due, `published`, and
+indexable documents become canonical publication entries. Host-specific
+metadata, `robots.txt`, `sitemap.xml`, and JSON-LD are derived from the resolved
+site and those entries. Search and feed integrations project the same entries,
+which prevents them from leaking drafts or disagreeing with the sitemap.
+
 Group inheritance is declared per site and content area in that same validated
 registry. A complete site value wins; otherwise the resolver reads one explicit
 group value. There is no field merging, site-to-site fallback, group chaining,
@@ -63,9 +69,9 @@ or request-time selection of an arbitrary inheritance source.
 
 ## Planned scope
 
-The initial releases will add typed Markdown/MDX content, SEO outputs, consent,
-analytics and form adapters, theme and component extension points, and migration
-guides for existing Next.js applications.
+The initial releases will add consent, analytics and form adapters, theme and
+component extension points, and migration guides for existing Next.js
+applications.
 
 Operational planning lives in the private OpenProject project. Public technical
 decisions and release-facing documentation live in this repository.
