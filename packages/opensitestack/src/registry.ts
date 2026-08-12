@@ -43,6 +43,8 @@ const consentPurposeSchema = z.enum([
   "marketing",
 ]);
 
+const consentRuntimeSchema = z.enum(["application", "consent-manager"]);
+
 const adapterReferenceSchema = z.object({ adapterId: identifierSchema }).strict();
 
 const integrationsSchema = z
@@ -52,6 +54,7 @@ const integrationsSchema = z
         adapterId: identifierSchema,
         policyVersion: z.string().trim().min(1),
         purposes: z.array(consentPurposeSchema).min(1).readonly(),
+        runtime: consentRuntimeSchema.optional(),
       })
       .strict()
       .optional(),
@@ -59,6 +62,7 @@ const integrationsSchema = z
       .object({
         adapterId: identifierSchema,
         consentPurpose: consentPurposeSchema,
+        runtime: consentRuntimeSchema.optional(),
       })
       .strict()
       .optional(),
@@ -93,6 +97,15 @@ const integrationsSchema = z
         code: "custom",
         path: ["analytics", "consentPurpose"],
         message: "Analytics consent purpose must be declared by consent configuration",
+      });
+    } else if (
+      (analytics.runtime ?? "application") !==
+      (consent.runtime ?? "application")
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["analytics", "runtime"],
+        message: "Analytics and consent runtimes must match",
       });
     }
   });

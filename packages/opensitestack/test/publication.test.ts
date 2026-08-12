@@ -39,12 +39,16 @@ function document(
 }
 
 describe("publication entries", () => {
-  it("keeps only content that is published, due and indexable", () => {
+  it("keeps immediate or due content that is published and indexable", () => {
     const entries = createPublicationEntries({
       site,
       now: new Date("2026-08-12T12:00:00Z"),
       candidates: [
         { content: document(), pathname: "/articles/article" },
+        {
+          content: document({ id: "evergreen", publishedAt: undefined }),
+          pathname: "/evergreen",
+        },
         {
           content: document({ id: "draft", status: "draft" }),
           pathname: "/draft",
@@ -69,6 +73,12 @@ describe("publication entries", () => {
         pathname: "/articles/article",
         siteId: "alpha",
         canonicalUrl: "https://alpha.example/articles/article",
+      },
+      {
+        content: document({ id: "evergreen", publishedAt: undefined }),
+        pathname: "/evergreen",
+        siteId: "alpha",
+        canonicalUrl: "https://alpha.example/evergreen",
       },
     ]);
   });

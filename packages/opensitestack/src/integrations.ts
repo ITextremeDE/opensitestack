@@ -33,8 +33,72 @@ const analyticsScriptSchema = z
 
 const analyticsScriptsSchema = z.array(analyticsScriptSchema).readonly();
 
+const consentManagerScriptSchema = z
+  .object({
+    id: identifierSchema,
+    src: z.url().refine((value) => new URL(value).protocol === "https:", {
+      message: "Consent manager script URL must use HTTPS",
+    }),
+    strategy: z
+      .enum(["beforeInteractive", "afterInteractive"])
+      .default("beforeInteractive"),
+    referrerPolicy: z
+      .enum([
+        "no-referrer",
+        "no-referrer-when-downgrade",
+        "origin",
+        "origin-when-cross-origin",
+        "same-origin",
+        "strict-origin",
+        "strict-origin-when-cross-origin",
+      ])
+      .optional(),
+  })
+  .strict();
+
+const consentManagerScriptsSchema = z
+  .array(consentManagerScriptSchema)
+  .readonly();
+
+const consentManagedAnalyticsScriptSchema = z.discriminatedUnion("kind", [
+  z
+    .object({
+      id: identifierSchema,
+      runtime: z.literal("consent-manager"),
+      kind: z.literal("external"),
+      managerId: identifierSchema,
+      group: identifierSchema,
+      src: z.url().refine((value) => new URL(value).protocol === "https:", {
+        message: "Analytics script URL must use HTTPS",
+      }),
+      async: z.boolean().default(true),
+    })
+    .strict(),
+  z
+    .object({
+      id: identifierSchema,
+      runtime: z.literal("consent-manager"),
+      kind: z.literal("inline"),
+      managerId: identifierSchema,
+      group: identifierSchema,
+      content: z.string().trim().min(1).max(65_536),
+    })
+    .strict(),
+]);
+
+const consentManagedAnalyticsScriptsSchema = z
+  .array(consentManagedAnalyticsScriptSchema)
+  .readonly();
+
 export type ConsentState = z.infer<typeof consentStateSchema>;
-export type AnalyticsScript = z.infer<typeof analyticsScriptSchema>;
+export type ApplicationAnalyticsScript = z.infer<typeof analyticsScriptSchema>;
+export type ConsentManagerScript = z.infer<typeof consentManagerScriptSchema>;
+export type ConsentManagedAnalyticsScript = z.infer<
+  typeof consentManagedAnalyticsScriptSchema
+>;
+export type AnalyticsScript =
+  | ApplicationAnalyticsScript
+  | ConsentManagedAnalyticsScript;
 
 export interface ConsentAdapter<Input = unknown> {
   readonly id: string;
@@ -42,6 +106,11 @@ export interface ConsentAdapter<Input = unknown> {
     readonly site: SiteDefinition;
     readonly input: Input;
   }): Promise<unknown>;
+}
+
+export interface ConsentManagerAdapter {
+  readonly id: string;
+  scripts(options: { readonly site: SiteDefinition }): Promise<unknown>;
 }
 
 export interface AnalyticsAdapter {
@@ -71,6 +140,9 @@ export type FormSubmissionResult<Output> =
 
 export type IntegrationErrorCode =
   | "CONSENT_ADAPTER_MISMATCH"
+  | "CONSENT_MANAGER_ADAPTER_MISMATCH"
+  | "INVALID_CONSENT_MANAGER_OUTPUT"
+  | "DUPLICATE_CONSENT_MANAGER_SCRIPT"
   | "ANALYTICS_ADAPTER_MISMATCH"
   | "INVALID_ANALYTICS_OUTPUT"
   | "DUPLICATE_ANALYTICS_SCRIPT"
@@ -94,7 +166,7 @@ export async function resolveConsent<Input>(options: {
   readonly input: Input;
 }): Promise<ConsentState | null> {
   const configuration = options.site.integrations?.consent;
-  if (!configuration) {
+  if (!configuration || configuration.runtime === "consent-manager") {
     return null;
   }
   if (!options.adapter || options.adapter.id !== configuration.adapterId) {
@@ -123,6 +195,41 @@ export async function resolveConsent<Input>(options: {
   };
 }
 
+export async function resolveConsentManagerScripts(options: {
+  readonly site: SiteDefinition;
+  readonly adapter?: ConsentManagerAdapter;
+}): Promise<readonly ConsentManagerScript[]> {
+  const configuration = options.site.integrations?.consent;
+  if (!configuration || configuration.runtime !== "consent-manager") {
+    return [];
+  }
+  if (!options.adapter || options.adapter.id !== configuration.adapterId) {
+    throw new IntegrationError(
+      "CONSENT_MANAGER_ADAPTER_MISMATCH",
+      `Site ${options.site.id} requires consent manager adapter ${configuration.adapterId}`,
+    );
+  }
+
+  const result = consentManagerScriptsSchema.safeParse(
+    await options.adapter.scripts({ site: options.site }),
+  );
+  if (!result.success) {
+    throw new IntegrationError(
+      "INVALID_CONSENT_MANAGER_OUTPUT",
+      `Consent manager adapter ${options.adapter.id} returned invalid scripts`,
+      { cause: result.error },
+    );
+  }
+  if (new Set(result.data.map((script) => script.id)).size !== result.data.length) {
+    throw new IntegrationError(
+      "DUPLICATE_CONSENT_MANAGER_SCRIPT",
+      `Consent manager adapter ${options.adapter.id} returned duplicate script ids`,
+    );
+  }
+
+  return result.data;
+}
+
 export function hasConsent(
   site: SiteDefinition,
   state: ConsentState | null,
@@ -131,6 +238,7 @@ export function hasConsent(
   const configuration = site.integrations?.consent;
   return Boolean(
     configuration &&
+      configuration.runtime !== "consent-manager" &&
       state &&
       state.policyVersion === configuration.policyVersion &&
       configuration.purposes.includes(purpose) &&
@@ -144,7 +252,14 @@ export async function resolveAnalyticsScripts(options: {
   readonly adapter?: AnalyticsAdapter;
 }): Promise<readonly AnalyticsScript[]> {
   const configuration = options.site.integrations?.analytics;
-  if (!configuration || !hasConsent(options.site, options.consent, configuration.consentPurpose)) {
+  if (!configuration) {
+    return [];
+  }
+  const runtime = configuration.runtime ?? "application";
+  if (
+    runtime === "application" &&
+    !hasConsent(options.site, options.consent, configuration.consentPurpose)
+  ) {
     return [];
   }
   if (!options.adapter || options.adapter.id !== configuration.adapterId) {
@@ -154,9 +269,10 @@ export async function resolveAnalyticsScripts(options: {
     );
   }
 
-  const result = analyticsScriptsSchema.safeParse(
-    await options.adapter.scripts({ site: options.site }),
-  );
+  const rawScripts = await options.adapter.scripts({ site: options.site });
+  const result = runtime === "consent-manager"
+    ? consentManagedAnalyticsScriptsSchema.safeParse(rawScripts)
+    : analyticsScriptsSchema.safeParse(rawScripts);
   if (!result.success) {
     throw new IntegrationError(
       "INVALID_ANALYTICS_OUTPUT",
@@ -171,7 +287,26 @@ export async function resolveAnalyticsScripts(options: {
     );
   }
 
-  return result.data;
+  if (runtime === "consent-manager") {
+    const consent = options.site.integrations?.consent;
+    if (!consent || consent.runtime !== "consent-manager") {
+      throw new IntegrationError(
+        "INVALID_ANALYTICS_OUTPUT",
+        `Site ${options.site.id} requires matching consent-manager configuration`,
+      );
+    }
+    if (result.data.some(
+      (script) =>
+        "managerId" in script && script.managerId !== consent.adapterId,
+    )) {
+      throw new IntegrationError(
+        "INVALID_ANALYTICS_OUTPUT",
+        `Analytics adapter ${options.adapter.id} returned scripts for another consent manager`,
+      );
+    }
+  }
+
+  return result.data as readonly AnalyticsScript[];
 }
 
 export async function submitSiteForm<Input, Output>(options: {

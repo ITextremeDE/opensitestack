@@ -29,15 +29,15 @@ const validDocument = {
 };
 
 describe("content schemas", () => {
-  it("validates the explicit lifecycle and publication date", () => {
+  it("validates the explicit lifecycle and optional publication schedule", () => {
     expect(contentDocumentSchema.parse(validDocument)).toMatchObject({
       status: "published",
       tags: ["example"],
       indexable: true,
     });
-    expect(() =>
+    expect(
       contentDocumentSchema.parse({ ...validDocument, publishedAt: undefined }),
-    ).toThrow("Published content requires publishedAt");
+    ).toMatchObject({ status: "published", publishedAt: undefined });
     expect(() =>
       contentDocumentSchema.parse({ ...validDocument, status: "live" }),
     ).toThrow();

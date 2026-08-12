@@ -14,9 +14,10 @@ URLs for the wrong brand.
 
 OpenSiteStack creates a site-bound `PublicationEntry` before content may enter a
 discovery output. The shared publication gate accepts only documents whose
-status is `published`, whose `publishedAt` timestamp is due, and whose
-`indexable` flag is true. It creates a canonical URL on the resolved site's
-configured HTTPS origin and rejects duplicate URLs.
+status is `published`, whose optional `publishedAt` timestamp is either absent
+or due, and whose `indexable` flag is true. An absent timestamp represents
+timeless content that is eligible immediately. It creates a canonical URL on
+the resolved site's configured HTTPS origin and rejects duplicate URLs.
 
 Metadata, sitemap rows, page structured data, search records, and feed records
 consume these entries. Search and feed implementations remain provider-specific

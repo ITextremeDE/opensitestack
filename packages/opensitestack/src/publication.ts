@@ -56,8 +56,8 @@ export function createPublicationEntries<T extends ContentDocument>({
     if (
       content.status !== "published" ||
       !content.indexable ||
-      !content.publishedAt ||
-      Date.parse(content.publishedAt) > nowTime
+      (content.publishedAt !== undefined &&
+        Date.parse(content.publishedAt) > nowTime)
     ) {
       continue;
     }

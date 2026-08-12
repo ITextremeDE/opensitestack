@@ -101,14 +101,15 @@ Page body.
 | `summary` | yes | Non-empty summary. |
 | `status` | yes | `draft`, `review`, `published`, or `archived`. |
 | `indexable` | no | Boolean, defaults to `true`. |
-| `publishedAt` | for published content | ISO 8601 timestamp with offset. |
+| `publishedAt` | no | ISO 8601 timestamp with offset. Omit for timeless content that should publish immediately. |
 | `updatedAt` | no | ISO 8601 timestamp with offset. |
 | `tags` | no | Array of kebab-case identifiers, defaults to an empty array. |
 | `body` | yes | Non-empty document body supplied by the source adapter. |
 
-`createPublicationEntries` publishes only due, `published`, indexable content.
-Drafts, reviews, archived records, and future publication timestamps stay out of
-page-level publication data, sitemaps, search, and feeds.
+`createPublicationEntries` publishes only `published`, indexable content. A
+missing `publishedAt` is immediately eligible; a future timestamp schedules the
+document and keeps it out of page-level publication data, sitemaps, search, and
+feeds until due. Drafts, reviews, and archived records always stay out.
 
 The Node-only `opensitestack/markdown` entry point recursively reads `.md` and
 `.mdx` files and ignores symbolic links. `defineContentSchema` can add strict
@@ -208,6 +209,22 @@ integrations: {
 ```
 
 Analytics requires consent configuration and a declared matching purpose.
+Consent and analytics must select the same runtime:
+
+- `application` is the default. OpenSiteStack validates a versioned consent
+  state and invokes analytics only after the configured purpose is granted.
+  Analytics output is limited to deferred external HTTPS scripts.
+- `consent-manager` delegates durable consent state and activation to an
+  external consent manager. `resolveConsentManagerScripts` validates its HTTPS
+  bootstrap descriptors. `resolveAnalyticsScripts` validates inert external or
+  inline analytics descriptors carrying the configured manager ID and a
+  manager-owned group; it does not wait for application consent state.
+
+The consuming application owns the renderer that maps consent-manager
+descriptors to vendor-specific inert-script attributes. Inline descriptor
+content must be trusted adapter code and must never come from untrusted content
+or request input.
+
 Unconfigured sites emit no provider scripts. Form adapters validate untrusted
 input with Zod before delivery. Provider packages, credentials, consent UI,
 CSRF/origin checks, abuse controls, and rate limits remain server-side concerns

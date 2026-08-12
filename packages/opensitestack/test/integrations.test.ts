@@ -5,9 +5,11 @@ import {
   hasConsent,
   resolveAnalyticsScripts,
   resolveConsent,
+  resolveConsentManagerScripts,
   submitSiteForm,
   type AnalyticsAdapter,
   type ConsentAdapter,
+  type ConsentManagerAdapter,
   type ConsentState,
   type ServerFormAdapter,
   type SiteDefinition,
@@ -57,6 +59,23 @@ const grantedConsent: ConsentState = {
   grantedPurposes: ["analytics"],
 };
 
+const managerSite: SiteDefinition = {
+  ...integratedSite,
+  integrations: {
+    consent: {
+      adapterId: "site-consent-manager",
+      policyVersion: "2026-08",
+      purposes: ["analytics"],
+      runtime: "consent-manager",
+    },
+    analytics: {
+      adapterId: "site-analytics",
+      consentPurpose: "analytics",
+      runtime: "consent-manager",
+    },
+  },
+};
+
 describe("consent adapters", () => {
   it("validates and deduplicates a current consent state", async () => {
     const adapter: ConsentAdapter<string> = {
@@ -100,6 +119,72 @@ describe("consent adapters", () => {
       }),
     ).resolves.toBeNull();
     expect(load).not.toHaveBeenCalled();
+  });
+
+  it("leaves provider-managed consent state to the configured manager", async () => {
+    const load = vi.fn(async () => grantedConsent);
+    await expect(
+      resolveConsent({
+        site: managerSite,
+        adapter: { id: "site-consent-manager", load },
+        input: null,
+      }),
+    ).resolves.toBeNull();
+    expect(load).not.toHaveBeenCalled();
+    expect(hasConsent(managerSite, grantedConsent, "analytics")).toBe(false);
+  });
+});
+
+describe("consent manager adapters", () => {
+  function adapter(scripts: unknown): ConsentManagerAdapter & {
+    scripts: ReturnType<typeof vi.fn>;
+  } {
+    return {
+      id: "site-consent-manager",
+      scripts: vi.fn(async () => scripts),
+    };
+  }
+
+  it("loads controlled HTTPS bootstrap scripts for manager runtime sites", async () => {
+    const manager = adapter([
+      {
+        id: "consent-manager",
+        src: "https://consent.example/manager.js",
+        referrerPolicy: "origin",
+      },
+    ]);
+
+    await expect(
+      resolveConsentManagerScripts({ site: managerSite, adapter: manager }),
+    ).resolves.toEqual([
+      {
+        id: "consent-manager",
+        src: "https://consent.example/manager.js",
+        strategy: "beforeInteractive",
+        referrerPolicy: "origin",
+      },
+    ]);
+  });
+
+  it("rejects insecure or duplicate manager scripts", async () => {
+    await expect(
+      resolveConsentManagerScripts({
+        site: managerSite,
+        adapter: adapter([
+          { id: "manager", src: "http://consent.example/manager.js" },
+        ]),
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_CONSENT_MANAGER_OUTPUT" });
+
+    await expect(
+      resolveConsentManagerScripts({
+        site: managerSite,
+        adapter: adapter([
+          { id: "manager", src: "https://consent.example/a.js" },
+          { id: "manager", src: "https://consent.example/b.js" },
+        ]),
+      }),
+    ).rejects.toMatchObject({ code: "DUPLICATE_CONSENT_MANAGER_SCRIPT" });
   });
 });
 
@@ -175,6 +260,72 @@ describe("analytics adapters", () => {
         ]),
       }),
     ).rejects.toMatchObject({ code: "DUPLICATE_ANALYTICS_SCRIPT" });
+  });
+
+  it("returns controlled external and inline scripts for a consent manager", async () => {
+    const analytics = adapter([
+      {
+        id: "analytics-library",
+        runtime: "consent-manager",
+        kind: "external",
+        managerId: "site-consent-manager",
+        group: "analytics",
+        src: "https://analytics.example/client.js",
+      },
+      {
+        id: "analytics-initialization",
+        runtime: "consent-manager",
+        kind: "inline",
+        managerId: "site-consent-manager",
+        group: "analytics",
+        content: "window.analyticsQueue = window.analyticsQueue || [];",
+      },
+    ]);
+
+    await expect(
+      resolveAnalyticsScripts({
+        site: managerSite,
+        consent: null,
+        adapter: analytics,
+      }),
+    ).resolves.toEqual([
+      {
+        id: "analytics-library",
+        runtime: "consent-manager",
+        kind: "external",
+        managerId: "site-consent-manager",
+        group: "analytics",
+        src: "https://analytics.example/client.js",
+        async: true,
+      },
+      {
+        id: "analytics-initialization",
+        runtime: "consent-manager",
+        kind: "inline",
+        managerId: "site-consent-manager",
+        group: "analytics",
+        content: "window.analyticsQueue = window.analyticsQueue || [];",
+      },
+    ]);
+  });
+
+  it("rejects scripts assigned to another consent manager", async () => {
+    await expect(
+      resolveAnalyticsScripts({
+        site: managerSite,
+        consent: null,
+        adapter: adapter([
+          {
+            id: "analytics",
+            runtime: "consent-manager",
+            kind: "external",
+            managerId: "another-manager",
+            group: "analytics",
+            src: "https://analytics.example/client.js",
+          },
+        ]),
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_ANALYTICS_OUTPUT" });
   });
 });
 

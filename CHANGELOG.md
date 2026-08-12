@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Provider-neutral, site-level consent, analytics, and server-form adapter
   contracts with versioned fail-closed consent, consent-gated HTTPS scripts,
   and Zod validation before form delivery.
+- Optional consent-manager runtime with validated HTTPS bootstrap scripts and
+  consent-managed external or inline analytics descriptors.
+- Timeless published content without a required publication timestamp while
+  retaining timestamp-based scheduling for dated content.
 - Validated design-token themes, CSS Custom Property generation, typed
   component slots, and controlled MDX component allowlists without a shared
   visual design.
