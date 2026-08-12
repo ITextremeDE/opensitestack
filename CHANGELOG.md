@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-08-12
+
+### Fixed
+
+- Allow metadata-only route documents with an empty body so component-driven
+  pages do not need synthetic Markdown content.
+
 ## [0.3.0] - 2026-08-12
 
 ### Added
@@ -39,5 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.
 
-[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.3.1
 [0.3.0]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.3.0

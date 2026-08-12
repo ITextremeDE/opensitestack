@@ -18,8 +18,11 @@ resolve to `null`.
 
 `contentDocumentSchema` defines IDs, route slugs, title, summary, lifecycle
 status, indexability, publication timestamps, tags, and body. Content is
-indexable by default and may opt out explicitly. `defineContentSchema` adds
-project-specific fields without allowing replacement of those base fields.
+indexable by default and may opt out explicitly. The body may be empty for a
+metadata-only route whose presentation is supplied entirely by components or
+structured fields. Source-specific schemas may require a body when their
+content model needs one. `defineContentSchema` adds project-specific fields
+without allowing replacement of those base fields.
 
 A `ContentSourceAdapter` returns raw values plus stable source references.
 `validateContentSource` validates every value, preserves provenance, and rejects
