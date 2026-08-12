@@ -90,6 +90,7 @@ export type {
   SiteGroupDefinition,
   SiteIntegrationsDefinition,
   SiteMetadata,
+  SiteRobotsDefinition,
   SiteRegistryDefinition,
   FormIntegrationDefinition,
 } from "./types";

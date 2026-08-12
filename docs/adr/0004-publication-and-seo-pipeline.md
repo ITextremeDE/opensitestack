@@ -22,7 +22,10 @@ the resolved site's configured HTTPS origin and rejects duplicate URLs.
 Metadata, sitemap rows, page structured data, search records, and feed records
 consume these entries. Search and feed implementations remain provider-specific
 projections. Site-wide metadata, robots rules, and website structured data use
-the resolved site directly because they do not enumerate content.
+the resolved site directly because they do not enumerate content. A site may
+declare unique, root-relative `robots.disallow` paths for application-owned
+routes such as APIs or previews; the Next.js adapter retains the common
+allow-all default and the canonical sitemap and host declarations.
 
 ## Consequences
 
@@ -33,3 +36,5 @@ the resolved site directly because they do not enumerate content.
   policy.
 - Rendering a preview remains possible outside the publication pipeline, but a
   preview must not be passed to discovery adapters.
+- Application routes can be excluded from crawlers without replacing the
+  shared robots adapter or weakening host-specific output.

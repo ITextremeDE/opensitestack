@@ -33,6 +33,30 @@ const metadataSchema = z
   })
   .strict();
 
+const robotsPathSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .regex(/^\/[^\r\n]*$/, "Robots paths must start with / and stay on one line");
+
+const robotsSchema = z
+  .object({
+    disallow: z.array(robotsPathSchema).min(1).readonly().optional(),
+  })
+  .strict()
+  .superRefine((robots, context) => {
+    if (
+      robots.disallow &&
+      new Set(robots.disallow).size !== robots.disallow.length
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["disallow"],
+        message: "Robots disallow paths must be unique",
+      });
+    }
+  });
+
 const contentInheritanceSchema = z
   .object({ groupId: identifierSchema })
   .strict();
@@ -118,6 +142,7 @@ const siteSchema = z
     developmentHosts: z.array(hostSchema).readonly().optional(),
     canonicalOrigin: z.url().trim(),
     metadata: metadataSchema,
+    robots: robotsSchema.optional(),
     contentAreas: z
       .record(identifierSchema, contentInheritanceSchema)
       .readonly()

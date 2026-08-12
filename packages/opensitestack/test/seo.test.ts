@@ -86,6 +86,23 @@ describe("SEO outputs", () => {
     ]);
   });
 
+  it("preserves validated site-specific robots exclusions", () => {
+    expect(
+      createNextRobots({
+        ...alpha,
+        robots: { disallow: ["/api/", "/preview/"] },
+      }),
+    ).toEqual({
+      rules: {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/preview/"],
+      },
+      sitemap: "https://alpha.example/sitemap.xml",
+      host: "https://alpha.example",
+    });
+  });
+
   it("creates site-bound structured data and escapes HTML delimiters", () => {
     expect(createWebsiteStructuredData(beta)).toMatchObject({
       "@type": "WebSite",

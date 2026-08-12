@@ -4,6 +4,10 @@ export type SiteMetadata = {
   readonly locale: string;
 };
 
+export type SiteRobotsDefinition = {
+  readonly disallow?: readonly string[];
+};
+
 export type ContentInheritanceDefinition = {
   readonly groupId: string;
 };
@@ -46,6 +50,7 @@ export type SiteDefinition = {
   readonly developmentHosts?: readonly string[];
   readonly canonicalOrigin: string;
   readonly metadata: SiteMetadata;
+  readonly robots?: SiteRobotsDefinition;
   readonly contentAreas?: SiteContentAreasDefinition;
   readonly integrations?: SiteIntegrationsDefinition;
   readonly theme: string;
