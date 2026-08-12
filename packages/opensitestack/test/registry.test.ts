@@ -294,4 +294,67 @@ describe("SiteRegistry", () => {
       ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
     }
   });
+
+  it("accepts matching consent-manager runtimes", () => {
+    const registry = defineSiteRegistry({
+      sites: [
+        {
+          id: "alpha",
+          name: "Alpha",
+          domain: "alpha.example",
+          canonicalOrigin: "https://alpha.example",
+          metadata,
+          integrations: {
+            consent: {
+              adapterId: "consent-manager",
+              policyVersion: "2026-08",
+              purposes: ["analytics"],
+              runtime: "consent-manager",
+            },
+            analytics: {
+              adapterId: "site-analytics",
+              consentPurpose: "analytics",
+              runtime: "consent-manager",
+            },
+          },
+          theme: "a",
+        },
+      ],
+    });
+
+    expect(registry.getSite("alpha")?.integrations).toMatchObject({
+      consent: { runtime: "consent-manager" },
+      analytics: { runtime: "consent-manager" },
+    });
+  });
+
+  it("rejects mismatched consent and analytics runtimes", () => {
+    expect(() =>
+      defineSiteRegistry({
+        sites: [
+          {
+            id: "alpha",
+            name: "Alpha",
+            domain: "alpha.example",
+            canonicalOrigin: "https://alpha.example",
+            metadata,
+            integrations: {
+              consent: {
+                adapterId: "consent-manager",
+                policyVersion: "2026-08",
+                purposes: ["analytics"],
+                runtime: "consent-manager",
+              },
+              analytics: {
+                adapterId: "site-analytics",
+                consentPurpose: "analytics",
+                runtime: "application",
+              },
+            },
+            theme: "a",
+          },
+        ],
+      }),
+    ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
+  });
 });

@@ -38,29 +38,7 @@ type ContentExtensionShape = {
   readonly [Field in keyof typeof contentBaseShape]?: never;
 };
 
-function requirePublicationDate(
-  value: unknown,
-  context: z.RefinementCtx,
-): void {
-  if (
-    typeof value === "object" &&
-    value !== null &&
-    "status" in value &&
-    value.status === "published" &&
-    (!("publishedAt" in value) || !value.publishedAt)
-  ) {
-    context.addIssue({
-      code: "custom",
-      path: ["publishedAt"],
-      message: "Published content requires publishedAt",
-    });
-  }
-}
-
-export const contentDocumentSchema = z
-  .object(contentBaseShape)
-  .strict()
-  .superRefine(requirePublicationDate);
+export const contentDocumentSchema = z.object(contentBaseShape).strict();
 
 export type ContentDocument = z.infer<typeof contentDocumentSchema>;
 
@@ -72,8 +50,5 @@ export function defineContentSchema<const Shape extends z.ZodRawShape>(
     throw new Error(`Content extension cannot replace reserved field: ${reservedField}`);
   }
 
-  return z
-    .object({ ...contentBaseShape, ...shape })
-    .strict()
-    .superRefine((value, context) => requirePublicationDate(value, context));
+  return z.object({ ...contentBaseShape, ...shape }).strict();
 }

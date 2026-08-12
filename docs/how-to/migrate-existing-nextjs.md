@@ -59,9 +59,9 @@ records with `validateContentSource`. Keep the source system and paths unchanged
 until the adapter contract is stable.
 
 Map the existing lifecycle to `draft`, `review`, `published`, and `archived`.
-Published records need an offset-aware `publishedAt`. Resolve complete site
-content first and one explicit group fallback second; do not reproduce implicit
-multi-level inheritance.
+Use an offset-aware `publishedAt` for scheduled or dated records. Omit it for
+timeless published pages. Resolve complete site content first and one explicit
+group fallback second; do not reproduce implicit multi-level inheritance.
 
 ## 6. Add group inheritance deliberately
 
@@ -91,8 +91,12 @@ theme or component override.
 
 Represent existing consent, analytics, and forms with provider-neutral adapter
 references. Keep credentials and provider SDKs in the consuming repository.
-Verify that analytics fails closed without a current matching consent grant and
-that form input is validated on the server before provider submission.
+Use the default application runtime when the application owns consent state;
+verify that analytics fails closed without a current matching grant. Use the
+consent-manager runtime only when an external manager owns activation; verify
+that bootstrap and inert script descriptors render with the vendor's documented
+attributes. In both modes, verify that form input is validated on the server
+before provider submission.
 
 ## 9. Add the next site
 

@@ -66,17 +66,20 @@ uses them. The example's Markdown and MDX files are validated explicitly during
 `pnpm check`, so invalid lifecycle values, metadata, duplicate IDs, or duplicate
 slugs fail before a production build can be published.
 
-Publication follows one additional shared gate: only due, `published`, and
-indexable documents become canonical publication entries. Host-specific
+Publication follows one additional shared gate: only `published`, indexable
+documents without a future publication timestamp become canonical publication
+entries. A missing timestamp represents timeless content. Host-specific
 metadata, `robots.txt`, `sitemap.xml`, and JSON-LD are derived from the resolved
 site and those entries. Search and feed integrations project the same entries,
 which prevents them from leaking drafts or disagreeing with the sitemap.
 
 Optional consent, analytics, and form integrations follow validated site-level
-adapter references. Analytics adapters are resolved only after a current grant
-for the configured purpose; unconfigured sites emit no provider scripts. Form
-adapters validate untrusted input on the server before provider submission.
-Provider packages, credentials, consent UI, and abuse controls stay in each
+adapter references. The default runtime resolves analytics only after a current
+grant for the configured purpose. A separate consent-manager runtime validates
+bootstrap and inert analytics descriptors while leaving activation to the
+external manager. Unconfigured sites emit no provider scripts. Form adapters
+validate untrusted input on the server before provider submission. Provider
+packages, credentials, rendering, consent UI, and abuse controls stay in each
 consuming site repository.
 
 Themes are site-owned token maps exposed as CSS Custom Properties. Typed

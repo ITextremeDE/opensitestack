@@ -60,7 +60,8 @@ const registry = defineSiteRegistry({
 
 `createPublicationEntries` is the canonical publication gate. It accepts route
 candidates for one resolved site and keeps only documents that are `published`,
-indexable, and whose `publishedAt` timestamp is due. It creates same-origin
+indexable, and whose optional `publishedAt` timestamp is due. Omitting
+`publishedAt` publishes timeless content immediately. It creates same-origin
 canonical URLs and rejects duplicate routes. Sitemap, search, feed, and
 page-level structured-data adapters consume only these entries, so they cannot
 silently disagree about publishability.
@@ -96,11 +97,13 @@ provider-specific records instead of implementing another publication filter.
 
 Sites opt into integrations with provider-neutral adapter IDs. A configured
 analytics adapter must name a purpose declared by the site's consent policy.
-Consent states are validated against the current policy version; malformed,
-stale, and undeclared grants fail closed. `resolveAnalyticsScripts` returns no
-scripts and does not call an adapter until the matching purpose is granted. It
-accepts only external HTTPS scripts with `afterInteractive` or `lazyOnload`
-strategies.
+Consent and analytics must use the same runtime.
+
+The default `application` runtime validates consent state against the current
+policy version; malformed, stale, and undeclared grants fail closed.
+`resolveAnalyticsScripts` returns no scripts and does not call an adapter until
+the matching purpose is granted. It accepts only external HTTPS scripts with
+`afterInteractive` or `lazyOnload` strategies.
 
 ```ts
 integrations: {
@@ -133,10 +136,39 @@ const scripts = await resolveAnalyticsScripts({
 });
 ```
 
-The consuming application may map the returned descriptors to `next/script`.
-The adapter implementation should be imported only when the site has the
-integration enabled. A site without analytics configuration always returns an
-empty list without invoking provider code.
+For an external consent manager that controls script activation, set both
+references to `runtime: "consent-manager"`. Its adapter supplies validated HTTPS
+bootstrap descriptors through `resolveConsentManagerScripts`. Analytics
+adapters then supply inert external or inline descriptors tagged with the same
+manager ID and a manager-owned group. OpenSiteStack validates these descriptors
+but deliberately does not prescribe vendor-specific HTML attributes.
+
+```ts
+integrations: {
+  consent: {
+    adapterId: "consent-manager",
+    policyVersion: "2026-08",
+    purposes: ["analytics"],
+    runtime: "consent-manager",
+  },
+  analytics: {
+    adapterId: "site-analytics",
+    consentPurpose: "analytics",
+    runtime: "consent-manager",
+  },
+}
+```
+
+The consuming application maps those descriptors to the consent manager's
+documented inert-script markup. Inline content is trusted adapter code, never
+untrusted CMS or document content. The consent manager remains responsible for
+activation and durable consent state in this runtime.
+
+The consuming application may map application-runtime descriptors to
+`next/script`; consent-manager descriptors require the manager-specific inert
+markup described above. The adapter implementation should be imported only
+when the site has the integration enabled. A site without analytics
+configuration always returns an empty list without invoking provider code.
 
 Forms are mapped by a site-owned form ID to one adapter ID. A
 `ServerFormAdapter` owns a Zod schema and receives only the parsed value. Call

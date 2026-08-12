@@ -14,15 +14,19 @@ export type SiteContentAreasDefinition = Readonly<
 
 export type ConsentPurpose = "preferences" | "analytics" | "marketing";
 
+export type ConsentRuntime = "application" | "consent-manager";
+
 export type ConsentIntegrationDefinition = {
   readonly adapterId: string;
   readonly policyVersion: string;
   readonly purposes: readonly ConsentPurpose[];
+  readonly runtime?: ConsentRuntime;
 };
 
 export type AnalyticsIntegrationDefinition = {
   readonly adapterId: string;
   readonly consentPurpose: ConsentPurpose;
+  readonly runtime?: ConsentRuntime;
 };
 
 export type FormIntegrationDefinition = {
