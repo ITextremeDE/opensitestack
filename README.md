@@ -50,6 +50,12 @@ metadata. Registry construction rejects invalid definitions and host collisions;
 request lookup returns `null` for malformed or unknown hosts so the Next.js
 adapter can respond with `notFound()` without selecting a fallback brand.
 
+Content follows the same boundary: source adapters only load raw records;
+OpenSiteStack validates them against an extensible schema before the application
+uses them. The example's Markdown and MDX files are validated explicitly during
+`pnpm check`, so invalid lifecycle values, metadata, duplicate IDs, or duplicate
+slugs fail before a production build can be published.
+
 ## Planned scope
 
 The initial releases will add typed Markdown/MDX content, SEO outputs, consent,

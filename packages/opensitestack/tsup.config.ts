@@ -5,6 +5,7 @@ export default defineConfig({
   dts: true,
   entry: {
     index: "src/index.ts",
+    markdown: "src/markdown.ts",
     next: "src/next.ts",
   },
   format: ["esm"],
