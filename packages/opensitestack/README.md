@@ -24,3 +24,33 @@ A `ContentSourceAdapter` returns raw values plus stable source references.
 `validateContentSource` validates every value, preserves provenance, and rejects
 duplicate IDs or slugs. The Node-only `opensitestack/markdown` entry point
 provides a recursive local Markdown/MDX adapter that ignores symbolic links.
+
+## Group inheritance
+
+A site may map a named `contentAreas` entry to one `groupId`. Registry creation
+verifies that the group exists and that the site is an explicit member. The
+resolver always returns a complete site value first, otherwise the one group
+value, otherwise `null`; it never merges fields or follows another fallback.
+
+```ts
+const registry = defineSiteRegistry({
+  sites: [
+    {
+      id: "alpha",
+      name: "Alpha",
+      domain: "alpha.example",
+      canonicalOrigin: "https://alpha.example",
+      metadata: {
+        title: "Alpha",
+        description: "Alpha website",
+        locale: "en",
+      },
+      contentAreas: { legal: { groupId: "company-group" } },
+      theme: "alpha",
+    },
+  ],
+  groups: [
+    { id: "company-group", name: "Company", siteIds: ["alpha"] },
+  ],
+});
+```

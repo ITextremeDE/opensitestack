@@ -16,4 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extensible content schemas with an explicit lifecycle, validated adapter
   provenance, duplicate detection, and a symlink-safe local Markdown/MDX source.
 - Build-time validation of the example application's local content collection.
+- Registry-bound, single-level content-area inheritance with complete site
+  overrides, explicit group membership checks, and deterministic provenance.
 - Initial architecture, contribution, security, and release documentation.

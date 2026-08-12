@@ -4,6 +4,14 @@ export type SiteMetadata = {
   readonly locale: string;
 };
 
+export type ContentInheritanceDefinition = {
+  readonly groupId: string;
+};
+
+export type SiteContentAreasDefinition = Readonly<
+  Record<string, ContentInheritanceDefinition>
+>;
+
 export type SiteDefinition = {
   readonly id: string;
   readonly name: string;
@@ -11,6 +19,7 @@ export type SiteDefinition = {
   readonly developmentHosts?: readonly string[];
   readonly canonicalOrigin: string;
   readonly metadata: SiteMetadata;
+  readonly contentAreas?: SiteContentAreasDefinition;
   readonly theme: string;
 };
 

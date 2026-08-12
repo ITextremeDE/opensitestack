@@ -22,11 +22,13 @@ export {
   type SiteRegistryErrorCode,
 } from "./registry";
 export type {
+  ContentInheritanceDefinition,
   ContentSource,
   GroupContentSource,
   ResolvedContent,
   SiteContentSource,
   SiteDefinition,
+  SiteContentAreasDefinition,
   SiteGroupDefinition,
   SiteMetadata,
   SiteRegistryDefinition,
