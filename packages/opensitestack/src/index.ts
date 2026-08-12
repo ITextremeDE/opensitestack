@@ -15,6 +15,21 @@ export {
   type ValidatedContentRecord,
 } from "./content-source";
 export {
+  hasConsent,
+  IntegrationError,
+  resolveAnalyticsScripts,
+  resolveConsent,
+  submitSiteForm,
+  type AnalyticsAdapter,
+  type AnalyticsScript,
+  type ConsentAdapter,
+  type ConsentState,
+  type FormSubmissionResult,
+  type FormValidationIssue,
+  type IntegrationErrorCode,
+  type ServerFormAdapter,
+} from "./integrations";
+export {
   defineSiteRegistry,
   normalizeHost,
   SiteRegistry,
@@ -37,6 +52,9 @@ export {
   type StructuredData,
 } from "./seo";
 export type {
+  AnalyticsIntegrationDefinition,
+  ConsentIntegrationDefinition,
+  ConsentPurpose,
   ContentInheritanceDefinition,
   ContentSource,
   GroupContentSource,
@@ -45,6 +63,8 @@ export type {
   SiteDefinition,
   SiteContentAreasDefinition,
   SiteGroupDefinition,
+  SiteIntegrationsDefinition,
   SiteMetadata,
   SiteRegistryDefinition,
+  FormIntegrationDefinition,
 } from "./types";

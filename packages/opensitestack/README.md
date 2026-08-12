@@ -91,3 +91,70 @@ before rendering JSON-LD in a native `<script type="application/ld+json">`.
 Search and feed providers remain application choices. They should use
 `projectPublicationEntries` to transform the same filtered entries into their
 provider-specific records instead of implementing another publication filter.
+
+## Consent, analytics, and forms
+
+Sites opt into integrations with provider-neutral adapter IDs. A configured
+analytics adapter must name a purpose declared by the site's consent policy.
+Consent states are validated against the current policy version; malformed,
+stale, and undeclared grants fail closed. `resolveAnalyticsScripts` returns no
+scripts and does not call an adapter until the matching purpose is granted. It
+accepts only external HTTPS scripts with `afterInteractive` or `lazyOnload`
+strategies.
+
+```ts
+integrations: {
+  consent: {
+    adapterId: "site-consent",
+    policyVersion: "2026-08",
+    purposes: ["analytics"],
+  },
+  analytics: {
+    adapterId: "site-analytics",
+    consentPurpose: "analytics",
+  },
+  forms: {
+    contact: { adapterId: "contact-delivery" },
+  },
+}
+```
+
+```ts
+const consent = await resolveConsent({
+  site,
+  adapter: consentAdapter,
+  input: consentCookie,
+});
+
+const scripts = await resolveAnalyticsScripts({
+  site,
+  consent,
+  adapter: analyticsAdapter,
+});
+```
+
+The consuming application may map the returned descriptors to `next/script`.
+The adapter implementation should be imported only when the site has the
+integration enabled. A site without analytics configuration always returns an
+empty list without invoking provider code.
+
+Forms are mapped by a site-owned form ID to one adapter ID. A
+`ServerFormAdapter` owns a Zod schema and receives only the parsed value. Call
+`submitSiteForm` from a Server Action or Route Handler and select the site from
+the trusted request host, not from a submitted field.
+
+```ts
+const result = await submitSiteForm({
+  site,
+  formId: "contact",
+  adapter: contactAdapter,
+  input: {
+    email: formData.get("email"),
+    message: formData.get("message"),
+  },
+});
+```
+
+Schema validation does not replace authentication, authorization, CSRF/origin
+checks, abuse protection, rate limits, or provider credential handling. Those
+controls remain server-side responsibilities of the consuming application.

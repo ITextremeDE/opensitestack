@@ -62,6 +62,13 @@ metadata, `robots.txt`, `sitemap.xml`, and JSON-LD are derived from the resolved
 site and those entries. Search and feed integrations project the same entries,
 which prevents them from leaking drafts or disagreeing with the sitemap.
 
+Optional consent, analytics, and form integrations follow validated site-level
+adapter references. Analytics adapters are resolved only after a current grant
+for the configured purpose; unconfigured sites emit no provider scripts. Form
+adapters validate untrusted input on the server before provider submission.
+Provider packages, credentials, consent UI, and abuse controls stay in each
+consuming site repository.
+
 Group inheritance is declared per site and content area in that same validated
 registry. A complete site value wins; otherwise the resolver reads one explicit
 group value. There is no field merging, site-to-site fallback, group chaining,
@@ -69,9 +76,8 @@ or request-time selection of an arbitrary inheritance source.
 
 ## Planned scope
 
-The initial releases will add consent, analytics and form adapters, theme and
-component extension points, and migration guides for existing Next.js
-applications.
+The initial releases will add theme and component extension points and migration
+guides for existing Next.js applications.
 
 Operational planning lives in the private OpenProject project. Public technical
 decisions and release-facing documentation live in this repository.

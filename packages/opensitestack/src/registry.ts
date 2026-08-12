@@ -37,6 +37,66 @@ const contentInheritanceSchema = z
   .object({ groupId: identifierSchema })
   .strict();
 
+const consentPurposeSchema = z.enum([
+  "preferences",
+  "analytics",
+  "marketing",
+]);
+
+const adapterReferenceSchema = z.object({ adapterId: identifierSchema }).strict();
+
+const integrationsSchema = z
+  .object({
+    consent: z
+      .object({
+        adapterId: identifierSchema,
+        policyVersion: z.string().trim().min(1),
+        purposes: z.array(consentPurposeSchema).min(1).readonly(),
+      })
+      .strict()
+      .optional(),
+    analytics: z
+      .object({
+        adapterId: identifierSchema,
+        consentPurpose: consentPurposeSchema,
+      })
+      .strict()
+      .optional(),
+    forms: z
+      .record(identifierSchema, adapterReferenceSchema)
+      .readonly()
+      .optional(),
+  })
+  .strict()
+  .superRefine((integrations, context) => {
+    const consent = integrations.consent;
+    if (consent && new Set(consent.purposes).size !== consent.purposes.length) {
+      context.addIssue({
+        code: "custom",
+        path: ["consent", "purposes"],
+        message: "Consent purposes must be unique",
+      });
+    }
+
+    const analytics = integrations.analytics;
+    if (!analytics) {
+      return;
+    }
+    if (!consent) {
+      context.addIssue({
+        code: "custom",
+        path: ["analytics"],
+        message: "Analytics requires consent configuration",
+      });
+    } else if (!consent.purposes.includes(analytics.consentPurpose)) {
+      context.addIssue({
+        code: "custom",
+        path: ["analytics", "consentPurpose"],
+        message: "Analytics consent purpose must be declared by consent configuration",
+      });
+    }
+  });
+
 const siteSchema = z
   .object({
     id: identifierSchema,
@@ -49,6 +109,7 @@ const siteSchema = z
       .record(identifierSchema, contentInheritanceSchema)
       .readonly()
       .optional(),
+    integrations: integrationsSchema.optional(),
     theme: identifierSchema,
   })
   .strict();

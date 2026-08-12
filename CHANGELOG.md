@@ -21,4 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A single publication gate for due, published, indexable content; same-origin
   canonicals; host-specific Next.js metadata, robots and sitemap adapters;
   safe JSON-LD helpers; and shared search/feed projection points.
+- Provider-neutral, site-level consent, analytics, and server-form adapter
+  contracts with versioned fail-closed consent, consent-gated HTTPS scripts,
+  and Zod validation before form delivery.
 - Initial architecture, contribution, security, and release documentation.
