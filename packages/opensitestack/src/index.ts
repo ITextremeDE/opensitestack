@@ -50,6 +50,11 @@ export {
   type PublicationEntry,
 } from "./publication";
 export {
+  createNextMetadata,
+  createNextRobots,
+  createNextSitemap,
+} from "./next-seo";
+export {
   assertEntryBelongsToSite,
   createWebPageStructuredData,
   createWebsiteStructuredData,

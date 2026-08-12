@@ -86,9 +86,11 @@ const searchDocuments = projectPublicationEntries(entries, (entry) => ({
 }));
 ```
 
-The `opensitestack/next` entry point exposes `createNextMetadata`,
-`createNextRobots`, and `createNextSitemap`. All use the already resolved site;
-content metadata and sitemap rows require a matching `PublicationEntry`.
+The package root exposes the pure `createNextMetadata`, `createNextRobots`, and
+`createNextSitemap` helpers. The `opensitestack/next` entry point additionally
+provides request-bound current-site resolution. All helpers use the already
+resolved site; content metadata and sitemap rows require a matching
+`PublicationEntry`.
 `createNextRobots` keeps the common allow-all policy and adds optional,
 validated site-level `robots.disallow` paths such as `/api/`.
 `createWebsiteStructuredData` and `createWebPageStructuredData` provide

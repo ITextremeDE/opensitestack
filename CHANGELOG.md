@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-08-12
+
+### Fixed
+
+- Export pure Next.js SEO helpers from the package root so tests and tooling can
+  use them without loading request-bound `next/headers` APIs.
+
 ## [0.4.0] - 2026-08-12
 
 ### Added
@@ -53,7 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.
 
-[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.1
 [0.4.0]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.0
 [0.3.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.3.1
 [0.3.0]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.3.0

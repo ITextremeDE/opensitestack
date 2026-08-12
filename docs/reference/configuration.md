@@ -134,9 +134,11 @@ export const { getCurrentSite, getCurrentSiteOrNull } =
 `getCurrentSiteOrNull` exposes the nullable result when the application needs to
 handle it itself. Both functions are request-cached.
 
-The same resolved site feeds `createNextMetadata`, `createNextRobots`, and
-`createNextSitemap`. Sitemap and content metadata entries must belong to that
-site. `createWebsiteStructuredData`, `createWebPageStructuredData`, and
+The package root exports the pure `createNextMetadata`, `createNextRobots`, and
+`createNextSitemap` helpers. The same resolved site feeds all three; sitemap and
+content metadata entries must belong to that site. The request-bound
+`createCurrentSiteResolver` remains in `opensitestack/next`.
+`createWebsiteStructuredData`, `createWebPageStructuredData`, and
 `serializeStructuredData` provide safely serialized JSON-LD helpers.
 `createNextRobots` allows crawling by default and includes the site's optional
 validated `robots.disallow` paths without changing its canonical sitemap or

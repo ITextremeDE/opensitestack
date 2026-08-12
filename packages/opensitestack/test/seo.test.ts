@@ -2,17 +2,15 @@ import { describe, expect, it } from "vitest";
 
 import {
   createPublicationEntries,
+  createNextMetadata,
+  createNextRobots,
+  createNextSitemap,
   createWebPageStructuredData,
   createWebsiteStructuredData,
   serializeStructuredData,
   type ContentDocument,
   type SiteDefinition,
 } from "../src";
-import {
-  createNextMetadata,
-  createNextRobots,
-  createNextSitemap,
-} from "../src/next";
 
 const alpha: SiteDefinition = {
   id: "alpha",
