@@ -195,4 +195,103 @@ describe("SiteRegistry", () => {
       ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
     }
   });
+
+  it("accepts provider-neutral site integration references", () => {
+    const registry = defineSiteRegistry({
+      sites: [
+        {
+          id: "alpha",
+          name: "Alpha",
+          domain: "alpha.example",
+          canonicalOrigin: "https://alpha.example",
+          metadata,
+          integrations: {
+            consent: {
+              adapterId: "site-consent",
+              policyVersion: "2026-08",
+              purposes: ["analytics"],
+            },
+            analytics: {
+              adapterId: "site-analytics",
+              consentPurpose: "analytics",
+            },
+            forms: { contact: { adapterId: "contact-delivery" } },
+          },
+          theme: "a",
+        },
+      ],
+    });
+
+    expect(registry.getSite("alpha")?.integrations).toMatchObject({
+      analytics: { adapterId: "site-analytics" },
+      forms: { contact: { adapterId: "contact-delivery" } },
+    });
+  });
+
+  it("rejects analytics without a declared matching consent purpose", () => {
+    for (const integrations of [
+      {
+        analytics: {
+          adapterId: "site-analytics",
+          consentPurpose: "analytics",
+        },
+      },
+      {
+        consent: {
+          adapterId: "site-consent",
+          policyVersion: "2026-08",
+          purposes: ["marketing"],
+        },
+        analytics: {
+          adapterId: "site-analytics",
+          consentPurpose: "analytics",
+        },
+      },
+    ]) {
+      expect(() =>
+        defineSiteRegistry({
+          sites: [
+            {
+              id: "alpha",
+              name: "Alpha",
+              domain: "alpha.example",
+              canonicalOrigin: "https://alpha.example",
+              metadata,
+              integrations: integrations as never,
+              theme: "a",
+            },
+          ],
+        }),
+      ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
+    }
+  });
+
+  it("rejects duplicate consent purposes and malformed adapter ids", () => {
+    for (const integrations of [
+      {
+        consent: {
+          adapterId: "site-consent",
+          policyVersion: "2026-08",
+          purposes: ["analytics", "analytics"],
+        },
+      },
+      { forms: { contact: { adapterId: "Provider Name" } } },
+    ]) {
+      expect(() =>
+        defineSiteRegistry({
+          sites: [
+            {
+              id: "alpha",
+              name: "Alpha",
+              domain: "alpha.example",
+              canonicalOrigin: "https://alpha.example",
+              metadata,
+              integrations: integrations as never,
+              theme: "a",
+            },
+          ],
+        }),
+      ).toThrow(expect.objectContaining({ code: "INVALID_DEFINITION" }));
+    }
+  });
 });

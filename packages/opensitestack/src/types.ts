@@ -12,6 +12,29 @@ export type SiteContentAreasDefinition = Readonly<
   Record<string, ContentInheritanceDefinition>
 >;
 
+export type ConsentPurpose = "preferences" | "analytics" | "marketing";
+
+export type ConsentIntegrationDefinition = {
+  readonly adapterId: string;
+  readonly policyVersion: string;
+  readonly purposes: readonly ConsentPurpose[];
+};
+
+export type AnalyticsIntegrationDefinition = {
+  readonly adapterId: string;
+  readonly consentPurpose: ConsentPurpose;
+};
+
+export type FormIntegrationDefinition = {
+  readonly adapterId: string;
+};
+
+export type SiteIntegrationsDefinition = {
+  readonly consent?: ConsentIntegrationDefinition;
+  readonly analytics?: AnalyticsIntegrationDefinition;
+  readonly forms?: Readonly<Record<string, FormIntegrationDefinition>>;
+};
+
 export type SiteDefinition = {
   readonly id: string;
   readonly name: string;
@@ -20,6 +43,7 @@ export type SiteDefinition = {
   readonly canonicalOrigin: string;
   readonly metadata: SiteMetadata;
   readonly contentAreas?: SiteContentAreasDefinition;
+  readonly integrations?: SiteIntegrationsDefinition;
   readonly theme: string;
 };
 
