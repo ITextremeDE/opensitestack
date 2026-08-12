@@ -158,3 +158,49 @@ const result = await submitSiteForm({
 Schema validation does not replace authentication, authorization, CSRF/origin
 checks, abuse protection, rate limits, or provider credential handling. Those
 controls remain server-side responsibilities of the consuming application.
+
+## Themes and components
+
+`defineThemeRegistry` validates site-owned design-token maps and can check every
+site's `theme` reference during application startup. Token names are arbitrary
+kebab-case identifiers; OpenSiteStack does not define colors, typography,
+spacing scales, or a shared visual language. `createThemeStyle` maps them to CSS
+Custom Properties without generating stylesheets or components.
+
+```tsx
+const themes = defineThemeRegistry(
+  {
+    themes: [
+      {
+        id: "alpha",
+        tokens: {
+          "color-background": "#f4efe4",
+          "font-display": "ui-serif, Georgia, serif",
+          "content-width": "48rem",
+        },
+      },
+    ],
+  },
+  siteRegistry.sites,
+);
+
+const theme = themes.getThemeForSite(site);
+return <html data-theme={theme.id} style={createThemeStyle(theme)} />;
+```
+
+`defineComponentSlots` keeps shared route and data logic independent from
+brand-owned presentation. It freezes a typed default component map and accepts
+overrides only for known slots. Components are returned by identity without a
+wrapper, hook, or Client Component boundary, so Server Components remain the
+default and individual sites can replace complete layouts.
+
+```tsx
+const homeSlots = defineComponentSlots({ Home: DefaultHome });
+const betaSlots = homeSlots.resolve({ Home: BetaHome });
+```
+
+`defineMdxComponents` applies the same explicit allowlist to the component map
+passed to an MDX renderer. A site may override an allowed component but cannot
+add an undeclared one through the resolver. The allowlist does not sanitize MDX
+source or disable JavaScript expressions and imports; untrusted MDX still needs
+a restricted compiler pipeline.

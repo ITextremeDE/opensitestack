@@ -1,54 +1,175 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light dark;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  background: Canvas;
-  color: CanvasText;
+  color-scheme: light;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+:root[data-theme="beta"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-}
-
-main {
-  display: grid;
-  gap: 1rem;
-  max-width: 48rem;
-  min-height: 100vh;
-  align-content: center;
-  margin: 0 auto;
-  padding: 2rem;
+  background: var(--color-background);
+  color: var(--color-text);
 }
 
 h1,
 p,
-dl {
+blockquote,
+dl,
+dd {
   margin: 0;
-}
-
-h1 {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  line-height: 0.95;
 }
 
 .eyebrow,
 dt {
-  color: color-mix(in srgb, CanvasText 60%, transparent);
-  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.alpha-home {
+  display: grid;
+  align-content: center;
+  gap: 3rem;
+  width: min(100%, var(--content-width));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: var(--page-space);
+}
+
+.alpha-home header {
+  display: grid;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+  padding-bottom: 2rem;
+}
+
+.alpha-home h1 {
+  max-width: 8ch;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.86;
+}
+
+.alpha-home blockquote {
+  max-width: 34ch;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.alpha-home footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.beta-home {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  gap: 1rem;
+  width: min(100%, var(--content-width));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: var(--page-space);
+}
+
+.beta-home aside,
+.beta-home section,
+.beta-home dl {
+  border: 1px solid color-mix(in srgb, var(--color-accent) 32%, transparent);
+  border-radius: var(--shape-radius);
+  background: var(--color-surface);
+}
+
+.beta-home aside {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  color: var(--color-accent);
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-dl {
-  display: grid;
-  gap: 0.75rem;
-  margin-top: 1rem;
+.status-dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 1rem var(--color-accent);
 }
 
-dl div {
+.beta-home section {
   display: grid;
-  grid-template-columns: 8rem 1fr;
+  align-content: end;
   gap: 1rem;
+  min-height: 32rem;
+  padding: clamp(2rem, 6vw, 5rem);
+}
+
+.beta-home h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 8rem);
+  font-weight: 800;
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.beta-copy {
+  max-width: 54ch;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+.beta-home dl {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.beta-home dl div {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.beta-home dd {
+  color: var(--color-accent);
+}
+
+@media (max-width: 48rem) {
+  .beta-home {
+    grid-template-columns: 1fr;
+  }
+
+  .beta-home section {
+    min-height: 65vh;
+  }
+
+  .beta-home dl {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
 }
