@@ -23,7 +23,7 @@ reverted independently.
 Install a deliberate compatible version instead of copying source files:
 
 ```bash
-corepack pnpm add opensitestack@^0.3.0
+corepack pnpm add opensitestack@^1.0.0
 ```
 
 Confirm that the consuming repository meets the package peer ranges shown in

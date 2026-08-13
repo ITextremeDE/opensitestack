@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, relative, resolve, sep } from "node:path";
 
-import matter from "gray-matter";
+import { parse as parseYaml } from "yaml";
 
 import type { ContentSourceAdapter, RawContentRecord } from "./content-source";
 
@@ -10,6 +10,35 @@ export type MarkdownContentSourceOptions = {
   readonly name?: string;
   readonly extensions?: readonly (".md" | ".mdx")[];
 };
+
+export type ParsedMarkdownDocument = {
+  readonly data: Readonly<Record<string, unknown>>;
+  readonly content: string;
+};
+
+export function parseMarkdownDocument(source: string): ParsedMarkdownDocument {
+  const normalized = source.charCodeAt(0) === 0xfeff ? source.slice(1) : source;
+  const match = /^---[\t ]*\r?\n([\s\S]*?)\r?\n(?:---|\.\.\.)[\t ]*(?:\r?\n|$)/.exec(
+    normalized,
+  );
+
+  if (!match) {
+    return { data: {}, content: normalized };
+  }
+
+  const parsed = parseYaml(match[1] ?? "");
+  if (parsed == null) {
+    return { data: {}, content: normalized.slice(match[0].length) };
+  }
+  if (typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new TypeError("Markdown frontmatter must be a YAML mapping");
+  }
+
+  return {
+    data: parsed as Record<string, unknown>,
+    content: normalized.slice(match[0].length),
+  };
+}
 
 export function createMarkdownContentSource({
   rootDirectory,
@@ -60,7 +89,7 @@ async function loadMarkdownRecord(
   }
 
   const source = await readFile(path, "utf8");
-  const parsed = matter(source);
+  const parsed = parseMarkdownDocument(source);
   return {
     reference,
     value: { ...parsed.data, body: parsed.content },

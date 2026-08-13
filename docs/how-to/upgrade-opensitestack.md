@@ -7,11 +7,24 @@ drift invisibly.
 ## 1. Read the release information
 
 Review the target release in `CHANGELOG.md` and any linked ADRs or migration
-notes. OpenSiteStack follows Semantic Versioning, but its public API is pre-1.0:
-minor releases may contain breaking changes.
+notes. OpenSiteStack follows Semantic Versioning. Starting with `1.0.0`,
+incompatible public API changes require a new major version.
 
 Check the target package's Node.js, Next.js, React, and package-manager ranges
 before changing the lockfile.
+
+### Migrating from 0.4.x to 1.0.0
+
+The registry, inheritance, publication, SEO, integration, theme, and component
+contracts are unchanged. Apply these explicit migrations:
+
+1. use Node.js 24 and pnpm 11.21;
+2. import pure SEO helpers from `opensitestack`, reserving
+   `opensitestack/next` for request-bound host resolution;
+3. replace direct `gray-matter` use with `parseMarkdownDocument` from
+   `opensitestack/markdown` where the application needs the same parser;
+4. optionally build Matrix `/.well-known` routes with the package-root Matrix
+   discovery helpers.
 
 ## 2. Create a reversible upgrade branch
 

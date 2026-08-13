@@ -3,8 +3,8 @@
 The `opensitestack` package provides the typed, site-neutral core and Next.js
 request adapter used by OpenSiteStack applications.
 
-The API is pre-1.0 and currently intended for development inside the
-OpenSiteStack workspace.
+The v1 API is stable under Semantic Versioning and is published for independent
+Next.js application repositories.
 
 ## Site registry
 
@@ -28,6 +28,8 @@ A `ContentSourceAdapter` returns raw values plus stable source references.
 `validateContentSource` validates every value, preserves provenance, and rejects
 duplicate IDs or slugs. The Node-only `opensitestack/markdown` entry point
 provides a recursive local Markdown/MDX adapter that ignores symbolic links.
+It also exports `parseMarkdownDocument` for applications that need the same
+YAML-frontmatter behavior without introducing a second parser.
 
 ## Group inheritance
 
@@ -100,6 +102,15 @@ before rendering JSON-LD in a native `<script type="application/ld+json">`.
 Search and feed providers remain application choices. They should use
 `projectPublicationEntries` to transform the same filtered entries into their
 provider-specific records instead of implementing another publication filter.
+
+## Matrix discovery
+
+The package root exposes builders for Matrix server and client discovery plus
+`createMatrixWellKnownResponse`. Applications keep their concrete homeserver,
+identity, authentication, and RTC values locally and use the shared helper in
+their `/.well-known/matrix/server` and `/.well-known/matrix/client` routes.
+Configured URLs must use HTTPS; responses receive interoperable CORS and cache
+headers. Sites without Matrix do not create these routes.
 
 ## Consent, analytics, and forms
 
