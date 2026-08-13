@@ -35,6 +35,16 @@ export {
   type ServerFormAdapter,
 } from "./integrations";
 export {
+  createMatrixClientDiscovery,
+  createMatrixServerDiscovery,
+  createMatrixWellKnownResponse,
+  type MatrixAuthenticationDiscovery,
+  type MatrixClientDiscovery,
+  type MatrixRtcFocus,
+  type MatrixServerDiscovery,
+  type MatrixWellKnownResponseOptions,
+} from "./matrix";
+export {
   defineSiteRegistry,
   normalizeHost,
   SiteRegistry,

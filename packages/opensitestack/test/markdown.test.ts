@@ -4,7 +4,10 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { createMarkdownContentSource } from "../src/markdown";
+import {
+  createMarkdownContentSource,
+  parseMarkdownDocument,
+} from "../src/markdown";
 
 const temporaryDirectories: string[] = [];
 
@@ -12,6 +15,28 @@ afterEach(async () => {
   await Promise.all(
     temporaryDirectories.splice(0).map((path) => rm(path, { recursive: true })),
   );
+});
+
+describe("parseMarkdownDocument", () => {
+  it("parses YAML mappings and preserves the document body", () => {
+    expect(parseMarkdownDocument("---\ntitle: Test\ntags:\n  - one\n---\n# Body\n")).toEqual({
+      data: { title: "Test", tags: ["one"] },
+      content: "# Body\n",
+    });
+  });
+
+  it("returns plain Markdown without frontmatter unchanged", () => {
+    expect(parseMarkdownDocument("# Body\n")).toEqual({
+      data: {},
+      content: "# Body\n",
+    });
+  });
+
+  it("rejects non-mapping frontmatter", () => {
+    expect(() => parseMarkdownDocument("---\n- invalid\n---\nBody")).toThrow(
+      "Markdown frontmatter must be a YAML mapping",
+    );
+  });
 });
 
 describe("createMarkdownContentSource", () => {

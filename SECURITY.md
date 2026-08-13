@@ -2,8 +2,12 @@
 
 ## Supported versions
 
-OpenSiteStack is pre-1.0 software. Security fixes currently target the latest
-released version only.
+Security fixes target the latest `1.x` release. Versions before `1.0.0` are no
+longer supported.
+
+Runtime dependencies are audited before every release. Consuming applications
+remain responsible for auditing their complete dependency tree because their
+Next.js, UI, content, and provider packages are outside OpenSiteStack.
 
 ## Reporting a vulnerability
 

@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-13
+
+### Added
+
+- Add provider-neutral Matrix server/client discovery builders and a shared
+  `/.well-known` response helper with CORS, caching, HTTPS validation, and tests.
+- Document the stable public API, supported runtime matrix, v1 migration path,
+  release validation, and rollback procedure.
+
+### Changed
+
+- Declare the existing registry, content, inheritance, publication, SEO,
+  integrations, theme, component, Markdown, and Next.js contracts stable under
+  Semantic Versioning.
+- Standardize development and CI on Node.js 24 and pnpm 11.21.
+- Replace the unmaintained `gray-matter` parser with `yaml` while preserving the
+  public Markdown adapter behavior and exposing `parseMarkdownDocument`.
+
 ## [0.4.1] - 2026-08-12
 
 ### Fixed
@@ -60,7 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.
 
-[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/ITextremeDE/opensitestack/compare/v0.4.1...v1.0.0
 [0.4.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.1
 [0.4.0]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.0
 [0.3.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.3.1
