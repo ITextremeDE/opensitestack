@@ -160,7 +160,7 @@ describe("consent manager adapters", () => {
       {
         id: "consent-manager",
         src: "https://consent.example/manager.js",
-        strategy: "beforeInteractive",
+        strategy: "afterInteractive",
         referrerPolicy: "origin",
       },
     ]);

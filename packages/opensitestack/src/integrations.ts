@@ -41,7 +41,7 @@ const consentManagerScriptSchema = z
     }),
     strategy: z
       .enum(["beforeInteractive", "afterInteractive"])
-      .default("beforeInteractive"),
+      .default("afterInteractive"),
     referrerPolicy: z
       .enum([
         "no-referrer",

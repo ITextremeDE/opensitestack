@@ -6,8 +6,8 @@
 ## Context
 
 Some sites store consent in the application and load analytics after reading a
-valid grant. Others use a dedicated consent manager that must load early and
-activate scripts represented by vendor-specific inert markup. Forcing the first
+valid grant. Others use a dedicated consent manager that must load before it
+activates scripts represented by vendor-specific inert markup. Forcing the first
 model onto the second either duplicates consent state or bypasses the manager.
 Embedding vendor markup in the platform core would couple OpenSiteStack to one
 provider.
@@ -24,6 +24,11 @@ bootstrap descriptors. Analytics adapters return validated inert descriptors:
 an external HTTPS script or bounded inline code, a manager ID, and a
 manager-owned group. The consuming application maps these descriptors to the
 manager's documented HTML attributes.
+
+Bootstrap descriptors default to `afterInteractive` so third-party managers do
+not mutate the document during React hydration. `beforeInteractive` remains
+available only as an explicit, provider-specific choice for integrations whose
+hydration safety has been demonstrated.
 
 Inline descriptor content is trusted adapter code. Content sources, CMS values,
 and request input must never populate it. OpenSiteStack validates structure and
