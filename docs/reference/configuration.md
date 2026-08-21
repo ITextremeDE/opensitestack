@@ -228,6 +228,8 @@ Consent and analytics must select the same runtime:
   bootstrap descriptors. `resolveAnalyticsScripts` validates inert external or
   inline analytics descriptors carrying the configured manager ID and a
   manager-owned group; it does not wait for application consent state.
+  Bootstrap descriptors default to `afterInteractive`; `beforeInteractive`
+  requires an explicit provider-specific choice and hydration-safety proof.
 
 The consuming application owns the renderer that maps consent-manager
 descriptors to vendor-specific inert-script attributes. Inline descriptor

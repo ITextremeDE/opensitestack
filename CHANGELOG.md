@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Default external consent-manager bootstrap scripts to `afterInteractive` to
+  prevent third-party DOM changes from racing React hydration.
+
 ## [1.0.0] - 2026-08-13
 
 ### Added

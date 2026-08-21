@@ -160,7 +160,10 @@ references to `runtime: "consent-manager"`. Its adapter supplies validated HTTPS
 bootstrap descriptors through `resolveConsentManagerScripts`. Analytics
 adapters then supply inert external or inline descriptors tagged with the same
 manager ID and a manager-owned group. OpenSiteStack validates these descriptors
-but deliberately does not prescribe vendor-specific HTML attributes.
+but deliberately does not prescribe vendor-specific HTML attributes. Bootstrap
+descriptors default to `afterInteractive` so an external manager cannot mutate
+the document during React hydration; consumers may select `beforeInteractive`
+explicitly only when the provider is proven hydration-safe.
 
 ```ts
 integrations: {
