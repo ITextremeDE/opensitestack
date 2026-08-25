@@ -1,6 +1,6 @@
 {
   "name": "opensitestack",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A typed multisite platform core for Next.js.",
   "license": "MPL-2.0",
   "repository": {
@@ -20,6 +20,12 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./security": {
+      "types": "./dist/security.d.ts",
+      "import": "./dist/security.js",
+      "require": "./dist/security.cjs",
+      "default": "./dist/security.js"
     },
     "./markdown": {
       "types": "./dist/markdown.d.ts",
