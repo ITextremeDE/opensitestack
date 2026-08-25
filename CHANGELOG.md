@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-08-25
+
 ### Fixed
 
 - Default external consent-manager bootstrap scripts to `afterInteractive` to
@@ -83,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.
 
-[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/ITextremeDE/opensitestack/compare/v0.4.1...v1.0.0
 [0.4.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.1
 [0.4.0]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.0
