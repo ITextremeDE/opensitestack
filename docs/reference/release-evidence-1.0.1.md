@@ -24,10 +24,19 @@ then ran its complete quality chain and `pnpm audit --audit-level=low`.
 
 | Consumer | Commit | Result |
 | --- | --- | --- |
-| AVAL | `73b1d74da561bcf2dfbef122c053a4eb3a59fc0b` | 16 Python tests, 159 unit tests, lint, type checks, production build, 5 Chromium smokes, and audit passed |
+| AVAL | `dcb49324d3ef51627b14ba7a544defc435447dc2` | 16 Python tests, 159 unit tests, lint, type checks, production build, 5 Chromium/Axe smokes without exclusions, and audit passed |
 | ITextreme | `07a57041c836cc4ab95dfffb06c49b86e42c2e02` | content checks, 10 unit tests, lint, type checks, 168-page production build, 11 Chromium tests, and audit passed |
-| Jürgen Schadek/JARON | `b94b949abfd0bc591076c2b1750806f620043c6c` | 4 unit tests, lint, type checks, 27-page production build, 7 Chromium tests, and audit passed |
+| Jürgen Schadek/JARON | `3fe7ff2a12389d0345db1cf6184712fca13d910f` | 4 unit tests, lint, type checks, 27-page production build, 7 Chromium tests, and audit passed |
 
 All three commits install the exact registry version, passed GitHub `Quality`,
-and are deployed. The complete production monitor and live browser verification
-across the 13 concrete production hosts passed after deployment.
+and are deployed. AVAL and Jürgen/JARON enforce their previously observed CSP;
+AVAL additionally uses the isolated shared Valkey rate-limit store from
+infrastructure commit `ef319639324a892e7e4393175d6aff300bacac1f`.
+
+The complete production monitor passed after deployment, including DNS, TLS,
+redirects, enforced CSP, the protected download, the deployment control plane,
+the configured rate-limit secret, Valkey health, and the absence of a published
+Valkey port. The live browser verification loaded each of the 13 concrete
+production hosts three times, confirmed rendered main content and styles, and
+reported no console warnings or errors. Consent rejection and the AVAL primary
+navigation were also exercised successfully.
