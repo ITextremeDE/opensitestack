@@ -1,6 +1,6 @@
 {
   "name": "opensitestack",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A typed multisite platform core for Next.js.",
   "license": "MPL-2.0",
   "repository": {

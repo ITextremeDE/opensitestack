@@ -72,6 +72,11 @@ export {
   type StructuredData,
 } from "./seo";
 export {
+  createHostOnlyHstsHeader,
+  HOST_ONLY_HSTS_VALUE,
+  type SecurityHeader,
+} from "./security";
+export {
   createThemeStyle,
   defineThemeRegistry,
   ThemeRegistry,
