@@ -10,6 +10,7 @@ The package root is browser-neutral and contains:
 - site-first, single-group content inheritance;
 - content schemas, source validation, publication filtering, and projections;
 - canonical URLs, metadata, robots, sitemap, and structured-data helpers;
+- a host-only HSTS header helper with a fixed one-year policy;
 - consent, analytics, form, Matrix discovery, theme, and component contracts.
 
 Pure SEO and Matrix helpers belong here. Importing them does not load
@@ -39,3 +40,15 @@ output layout below `dist`, error message prose, and example styling do not.
 
 Provider implementations, application routes, design components, content,
 credentials, and deployment configuration remain application-owned.
+
+## Host-only HSTS
+
+`createHostOnlyHstsHeader()` returns a Next.js-compatible header object with
+the exact value `max-age=31536000`. `HOST_ONLY_HSTS_VALUE` exposes the same
+value for production verifiers and tests.
+
+The shared contract deliberately excludes `includeSubDomains` and `preload`.
+Applications must apply the helper to every concrete website host; redirect
+aliases configured outside Next.js need the equivalent header at their edge.
+Domain-wide HSTS is an explicit infrastructure decision, not an application
+default.

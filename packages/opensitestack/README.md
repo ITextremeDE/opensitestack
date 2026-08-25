@@ -6,6 +6,14 @@ request adapter used by OpenSiteStack applications.
 The v1 API is stable under Semantic Versioning and is published for independent
 Next.js application repositories.
 
+## Host-only HSTS
+
+`createHostOnlyHstsHeader()` returns the shared one-year browser policy
+`Strict-Transport-Security: max-age=31536000`. It intentionally excludes
+`includeSubDomains` and `preload` so a website cannot impose policy on sibling
+subdomains outside its operating boundary. Apply it to every concrete HTTPS
+website host and validate redirect-only aliases at the responsible edge.
+
 ## Site registry
 
 `defineSiteRegistry` validates production domains, optional development hosts,

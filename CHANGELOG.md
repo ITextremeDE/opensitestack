@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-08-25
+
+### Added
+
+- Add a shared, regression-tested host-only HSTS helper with a fixed one-year
+  policy and no `includeSubDomains` or `preload` directives.
+
 ## [1.0.1] - 2026-08-25
 
 ### Fixed
@@ -85,7 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.
 
-[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/ITextremeDE/opensitestack/compare/v0.4.1...v1.0.0
 [0.4.1]: https://github.com/ITextremeDE/opensitestack/releases/tag/v0.4.1
