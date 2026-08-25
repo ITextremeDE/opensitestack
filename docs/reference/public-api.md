@@ -43,9 +43,11 @@ credentials, and deployment configuration remain application-owned.
 
 ## Host-only HSTS
 
-`createHostOnlyHstsHeader()` returns a Next.js-compatible header object with
-the exact value `max-age=31536000`. `HOST_ONLY_HSTS_VALUE` exposes the same
-value for production verifiers and tests.
+`opensitestack/security` exports `createHostOnlyHstsHeader()`, which returns a
+Next.js-compatible header object with the exact value `max-age=31536000`.
+`HOST_ONLY_HSTS_VALUE` exposes the same value for production verifiers and
+tests. The dedicated entry point supports both ESM imports and the synchronous
+loading path used for `next.config.ts`.
 
 The shared contract deliberately excludes `includeSubDomains` and `preload`.
 Applications must apply the helper to every concrete website host; redirect

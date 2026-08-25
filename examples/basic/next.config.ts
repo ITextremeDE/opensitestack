@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { createHostOnlyHstsHeader } from "opensitestack";
+import { createHostOnlyHstsHeader } from "opensitestack/security";
 
 const nextConfig: NextConfig = {
   async headers() {
