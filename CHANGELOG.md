@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Align the library development dependency with the patched Next.js 16.3.3
+  example and refresh vulnerable transitive sharp and js-yaml packages.
+
 ## [1.0.3] - 2026-08-25
 
 ### Fixed
