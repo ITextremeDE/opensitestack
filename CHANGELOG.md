@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Align the library development dependency with Next.js 16.3.8 while preserving
+  the verified transitive dependency baseline and release-age policy.
+
 - Update the basic example to Next.js 16.3.8 and refresh its lockfile.
 
 - Align the library development dependency with the patched Next.js 16.3.3
