@@ -47,3 +47,13 @@ jobs:
           include-hidden-files: true
           retention-days: 14
           if-no-files-found: warn
+
+  gate:
+    name: check
+    if: always()
+    needs: [check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require both supported Node majors
+        run: test '${{ needs.check.result }}' = 'success'
