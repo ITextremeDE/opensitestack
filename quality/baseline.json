@@ -1,0 +1,57 @@
+{
+  "measuredAt": "2026-10-27T03:18:13.976Z",
+  "node": "v26.9.0",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "profile": {
+    "lighthouseVersion": "12.6.1",
+    "formFactor": "mobile",
+    "throttlingMethod": "devtools",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.56,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    }
+  },
+  "measurements": [
+    {
+      "id": "alpha-home",
+      "url": "http://127.0.0.1:3100/",
+      "performance": 1,
+      "lcpMs": 1245.708,
+      "cls": 0,
+      "scriptBytes": 135882,
+      "imageBytes": 0,
+      "totalBytes": 142362
+    },
+    {
+      "id": "beta-home",
+      "url": "http://beta.localhost:3100/",
+      "performance": 1,
+      "lcpMs": 1264.028,
+      "cls": 0,
+      "scriptBytes": 135882,
+      "imageBytes": 0,
+      "totalBytes": 142547
+    },
+    {
+      "id": "consent-example",
+      "url": "http://127.0.0.1:3100/consent-example",
+      "performance": 1,
+      "lcpMs": 1246.993,
+      "cls": 0,
+      "scriptBytes": 138138,
+      "imageBytes": 0,
+      "totalBytes": 145082
+    }
+  ],
+  "budgetPolicy": {
+    "headroom": 0.25,
+    "roundUpBytes": 10240,
+    "scope": "Synthetic reference only; CI retains raw reports for each tested commit."
+  },
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+}

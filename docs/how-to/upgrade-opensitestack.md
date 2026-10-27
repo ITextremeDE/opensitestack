@@ -18,7 +18,7 @@ before changing the lockfile.
 The registry, inheritance, publication, SEO, integration, theme, and component
 contracts are unchanged. Apply these explicit migrations:
 
-1. use Node.js 24 and pnpm 11.21;
+1. use a supported Node.js major (24 or 26) and pnpm 11.21;
 2. import pure SEO helpers from `opensitestack`, reserving
    `opensitestack/next` for request-bound host resolution;
 3. replace direct `gray-matter` use with `parseMarkdownDocument` from
@@ -34,7 +34,7 @@ the current lockfile available as the rollback point.
 Update to one deliberate version:
 
 ```bash
-corepack pnpm update opensitestack@<target-version>
+pnpm update opensitestack@<target-version>
 ```
 
 Do not combine the platform upgrade with design work, content migration, or an

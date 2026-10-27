@@ -1,0 +1,34 @@
+{
+  "port": 3100,
+  "runs": 3,
+  "minimumPerformance": 0.9,
+  "maximumLcpMs": 2500,
+  "maximumCls": 0.1,
+  "pages": [
+    {
+      "id": "alpha-home",
+      "host": "127.0.0.1",
+      "path": "/",
+      "scriptBytes": 174080,
+      "imageBytes": 0,
+      "totalBytes": 184320
+    },
+    {
+      "id": "beta-home",
+      "host": "beta.localhost",
+      "path": "/",
+      "scriptBytes": 174080,
+      "imageBytes": 0,
+      "totalBytes": 184320
+    },
+    {
+      "id": "consent-example",
+      "host": "127.0.0.1",
+      "path": "/consent-example",
+      "scriptBytes": 174080,
+      "imageBytes": 0,
+      "totalBytes": 184320
+    }
+  ],
+  "exceptions": []
+}

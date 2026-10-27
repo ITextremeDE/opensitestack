@@ -12,17 +12,18 @@ package into their repository.
 ## Prerequisites
 
 - Git
-- Node.js 24
-- Corepack with pnpm 11 support
+- Node.js 24 or 26 (`.nvmrc` selects the development default)
+- pnpm 11.21.0; install via `npm install --global pnpm@11.21.0` if needed
+  (Node 26 does not bundle Corepack)
 
 Check the runtime before installing dependencies:
 
 ```bash
 node --version
-corepack pnpm --version
+pnpm --version
 ```
 
-The major versions must be Node.js 24 and pnpm 11.
+Node.js must be one of the supported majors (24 or 26) and pnpm must be 11.21.x.
 
 ## Install from source
 
@@ -32,8 +33,8 @@ dependencies:
 ```bash
 git clone https://github.com/ITextremeDE/opensitestack.git
 cd opensitestack
-corepack pnpm install --frozen-lockfile
-corepack pnpm check
+pnpm install --frozen-lockfile
+pnpm check
 ```
 
 `pnpm check` validates the package, all content records, TypeScript, and the
@@ -42,7 +43,7 @@ production build before the development server is started.
 ## Start the application
 
 ```bash
-corepack pnpm dev
+pnpm dev
 ```
 
 Open these URLs in a browser:
@@ -81,7 +82,7 @@ The complete file map and expected behavior are documented in the
 Change the Alpha accent token in `examples/basic/src/config/sites.ts`, then run:
 
 ```bash
-corepack pnpm check
+pnpm check
 ```
 
 Only Alpha's presentation should change. Revert the token after the exercise;
@@ -94,3 +95,9 @@ no platform code or Beta component needs to be copied.
 - Use the [migration guide](../how-to/migrate-existing-nextjs.md) when adopting
   the package in an existing website repository.
 - Use the [upgrade guide](../how-to/upgrade-opensitestack.md) for later releases.
+
+## Rendered verification
+
+Follow [quality gates](../how-to/quality-gates.md) after `pnpm check` to run the
+production browser and mobile budget tests. The [consent lifecycle example](../how-to/consent-renderer-lifecycle.md)
+is available at `/consent-example` on either local host.
