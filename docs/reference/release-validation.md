@@ -1,12 +1,14 @@
 # Release validation
 
-Run the reproducible package gate from a clean checkout with Node.js 24 and the
+Run the reproducible package gate from a clean checkout with each supported Node.js major (24 and 26) and the
 repository-declared pnpm version:
 
 ```bash
-corepack pnpm install --frozen-lockfile
-corepack pnpm release:check
+pnpm install --frozen-lockfile
+pnpm release:check
 ```
+
+Install pnpm 11.21.0 explicitly if necessary; Node 26 does not bundle Corepack.
 
 The gate runs lint, unit tests, documentation-link validation, package and
 reference-application builds, type checks, the dependency audit, and a dry-run
@@ -56,3 +58,12 @@ investigate any package without a recognized license before release.
 npm versions and Git tags are immutable. If publication is defective, restore
 consumers to their previous lockfiles and publish a corrected patch version; do
 not overwrite or silently retag the release.
+
+## Repository-only quality changes
+
+For changes confined to repository tooling, documentation and `examples/basic`,
+run `pnpm check`, `pnpm test:browser` and `pnpm quality:budgets` on the Node 24/26
+CI matrix. Review the complete diff and retain synthetic raw evidence. If the
+published package files, exports and public contracts are unchanged, publish the
+repository changes without inventing a new npm version or rolling consumers.
+A package change still follows the full tarball/consumer gate above.

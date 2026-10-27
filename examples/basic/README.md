@@ -43,10 +43,22 @@ Follow the clean-checkout instructions in
 From an installed workspace the short form is:
 
 ```bash
-corepack pnpm check
-corepack pnpm dev
+pnpm check
+pnpm dev
 ```
 
 The application is a contract example, not a design starter. Consuming
 repositories should keep their own CSS, components, content, provider adapters,
 credentials, and deployment configuration.
+
+## Quality reference
+
+`/consent-example` is a synthetic local consent-manager fixture. It has no real
+SDK, external endpoint, production consent UI or new core API. See the
+[renderer lifecycle guide](../../docs/how-to/consent-renderer-lifecycle.md).
+
+From the workspace root, run `pnpm check`, `pnpm test:browser` and
+`pnpm quality:budgets`. The browser/performance matrix is in
+[quality/config.json](../../quality/config.json); the
+[quality guide](../../docs/how-to/quality-gates.md) explains calibration,
+manual acceptance, field limits and artifact visibility.

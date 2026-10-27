@@ -173,3 +173,13 @@ dt {
     grid-template-columns: 1fr;
   }
 }
+
+/* Example-owned accessible controls; no shared visual component contract. */
+.consent-example { max-width: 48rem; margin: 3rem auto; padding: 1.25rem; overflow-wrap: anywhere; }
+.consent-example h1 { font-size: clamp(2rem, 6vw, 3rem); }
+.consent-example__controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1.25rem; }
+.consent-example button { min-height: 44px; padding: .6rem 1rem; color: inherit; background: transparent; border: 2px solid currentColor; border-radius: .25rem; font: inherit; cursor: pointer; }
+.consent-example button:disabled { opacity: .5; cursor: default; }
+.consent-example button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.consent-example dialog { max-width: min(36rem, calc(100vw - 2rem)); padding: 1.5rem; color: var(--color-text); background: var(--color-background); border: 2px solid currentColor; }
+.consent-example dialog::backdrop { background: rgb(0 0 0 / .5); }

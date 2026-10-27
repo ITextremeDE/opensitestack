@@ -53,7 +53,7 @@ export const themeRegistry = defineThemeRegistry(
           "color-background": "#f4efe4",
           "color-surface": "#fffaf0",
           "color-text": "#18251f",
-          "color-muted": "#657269",
+          "color-muted": "#5f6c63",
           "color-accent": "#b34b2e",
           "font-body": "ui-serif, Georgia, serif",
           "font-display": "ui-serif, Georgia, serif",

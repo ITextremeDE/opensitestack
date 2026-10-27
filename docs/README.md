@@ -17,5 +17,9 @@ Choose the document that matches the job you are doing:
 - [Upgrade OpenSiteStack](how-to/upgrade-opensitestack.md) — update a consuming
   repository safely and keep rollback possible.
 
+- [Rendered quality gates](how-to/quality-gates.md) — browser matrix, budgets and evidence.
+- [Consent-renderer lifecycle](how-to/consent-renderer-lifecycle.md) — ready/registration/grant/revocation reference.
+- [Frontend performance patterns](how-to/frontend-performance.md) — critical fonts, themes, native controls and prefetching.
+
 Architecture decisions and their consequences are recorded separately in
 [the ADR directory](adr/).

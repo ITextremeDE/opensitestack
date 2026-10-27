@@ -7,7 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add a configurable rendered reference matrix with axe, reflow and keyboard
+  checks, three-run mobile Lighthouse medians, validated throttling, reviewed
+  transfer limits and raw CI evidence.
+- Add an example-owned synthetic consent manager and early/late registration,
+  persisted choice and revocation tests without external analytics.
+- Add provider-neutral consent and frontend-performance guides.
+
+### Changed
+
+- Test the source workspace/reference on Node 24 and 26; default development to
+  Node 26.9.0 and document pnpm setup without assuming bundled Corepack.
+- Keep the published core API and npm package unchanged for this tooling work.
+
 ### Fixed
+
+- Pin available patched vendor dependencies in the Lighthouse toolchain;
+  document its unused archive-extraction dependency and separate audit boundary.
+
+- Correct muted-text contrast in the Alpha reference theme.
 
 - Align the library development dependency with Next.js 16.3.8 while preserving
   the verified transitive dependency baseline and release-age policy.

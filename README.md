@@ -31,7 +31,7 @@ docs/adr/                Architecture decisions
 
 ## Requirements
 
-- Node.js 24
+- Node.js 24 or 26 (default: `.nvmrc`)
 - pnpm 11
 
 ## Development
@@ -49,6 +49,9 @@ pnpm dev
 - [Migrate an existing Next.js website](docs/how-to/migrate-existing-nextjs.md)
 - [Upgrade OpenSiteStack](docs/how-to/upgrade-opensitestack.md)
 - [Basic reference application](examples/basic/README.md)
+- [Rendered quality gates](docs/how-to/quality-gates.md)
+- [Consent-renderer lifecycle](docs/how-to/consent-renderer-lifecycle.md)
+- [Frontend performance patterns](docs/how-to/frontend-performance.md)
 
 The example resolves `localhost` to Alpha and `beta.localhost` to Beta. Alpha
 uses group content and an editorial layout; Beta demonstrates a complete site

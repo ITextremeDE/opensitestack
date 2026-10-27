@@ -10,5 +10,5 @@ export default defineConfig([
       "@next/next/no-html-link-for-pages": "off",
     },
   },
-  globalIgnores(["**/.next/**", "**/coverage/**", "**/dist/**"]),
+  globalIgnores(["**/.next/**", "**/coverage/**", "**/dist/**", ".lighthouseci/**", "var/**", "test-results/**", "playwright-report/**"]),
 ]);
