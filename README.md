@@ -52,6 +52,7 @@ pnpm dev
 - [Rendered quality gates](docs/how-to/quality-gates.md)
 - [Consent-renderer lifecycle](docs/how-to/consent-renderer-lifecycle.md)
 - [Frontend performance patterns](docs/how-to/frontend-performance.md)
+- [Host-specific llms.txt guides](docs/how-to/llms-guide.md)
 
 The example resolves `localhost` to Alpha and `beta.localhost` to Beta. Alpha
 uses group content and an editorial layout; Beta demonstrates a complete site
