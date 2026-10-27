@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Pin available patched vendor dependencies in the Lighthouse toolchain;
+  document its unused archive-extraction dependency and separate audit boundary.
+
 - Correct muted-text contrast in the Alpha reference theme.
 
 - Align the library development dependency with Next.js 16.3.8 while preserving

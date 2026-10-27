@@ -34,9 +34,12 @@ const measurement = {
   imageBytes: 0,
   totalBytes: 1000,
 };
+let runSequence = 0;
 function report(score = 0.95, lcp = 1500) {
   return {
     requestedUrl: "http://127.0.0.1:3100/",
+    finalDisplayedUrl: "http://127.0.0.1:3100/",
+    fetchTime: new Date(++runSequence * 1000).toISOString(),
     lighthouseVersion: profile.lighthouseVersion,
     configSettings: clone(profile),
     categories: { performance: { score } },
@@ -68,6 +71,10 @@ test("rejects missing, extra, duplicate and redirected runs", () => {
   assert.throws(() =>
     summarize([report(), report(), report(), report()], config),
   );
+  const duplicate = report();
+  assert.throws(() =>
+    summarize([duplicate, clone(duplicate), report()], config),
+  );
   const r = report();
   r.requestedUrl = "http://localhost:3100/";
   assert.throws(() => summarize([r, report(), report()], config));
@@ -77,6 +84,8 @@ test("rejects missing, extra, duplicate and redirected runs", () => {
 });
 test("rejects runtime errors, missing metrics, changed versions and weaker throttling", () => {
   for (const mutate of [
+    (r) => (r.fetchTime = "invalid"),
+    (r) => delete r.finalDisplayedUrl,
     (r) => (r.runtimeError = { code: "NO_FCP" }),
     (r) => (r.lighthouseVersion = "other"),
     (r) => (r.configSettings.formFactor = "desktop"),

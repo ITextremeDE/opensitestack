@@ -8,3 +8,10 @@ allowBuilds:
 
 overrides:
   esbuild: 0.28.2
+
+  # Patched vendor dependencies for the synthetic Lighthouse toolchain.
+  "@lhci/cli>tmp": 0.2.7
+  "external-editor>tmp": 0.2.7
+  "@lhci/cli>uuid": 11.1.1
+  "get-uri>basic-ftp": 6.2.3
+  "minimatch@3>brace-expansion": 1.1.21

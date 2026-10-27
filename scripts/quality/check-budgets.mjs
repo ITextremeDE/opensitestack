@@ -12,11 +12,15 @@ export function summarize(reports, config, expectedProfile = profile) {
   return config.pages.map((page) => {
     const url = pageUrl(page, config),
       samples = reports.filter((r) => r.requestedUrl === url);
-    if (samples.length !== 3)
+    if (
+      samples.length !== 3 ||
+      new Set(samples.map((r) => r.fetchTime)).size !== 3
+    )
       throw new Error(`${page.id}: missing or duplicate runs`);
     for (const r of samples) {
       const settings = r.configSettings;
       if (
+        !Number.isFinite(Date.parse(r.fetchTime)) ||
         r.runtimeError ||
         r.lighthouseVersion !== expectedProfile.lighthouseVersion ||
         settings?.formFactor !== expectedProfile.formFactor ||
@@ -26,7 +30,7 @@ export function summarize(reports, config, expectedProfile = profile) {
             Number.isFinite(settings?.throttling?.[key]) &&
             Math.abs(settings.throttling[key] - value) < 1e-7,
         ) ||
-        (r.finalDisplayedUrl && r.finalDisplayedUrl !== url)
+        r.finalDisplayedUrl !== url
       )
         throw new Error(`${page.id}: invalid report or lab profile`);
     }

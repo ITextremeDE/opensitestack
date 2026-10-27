@@ -92,3 +92,18 @@ Navigation Lighthouse does not measure representative field INP. Check whether
 field data exists; missing data is not a pass. Activating a new collector needs
 the consuming site's own data/privacy decision. A synthetic manager test does
 not validate a real provider SDK or the full third-party performance cost.
+
+## Dependency-audit boundary
+
+Run `pnpm audit` separately from rendered acceptance; a passing page budget is
+not a clean dependency audit. The workspace pins patched vendor dependencies
+for the Lighthouse CLI where available. Its transitive `extract-zip` 2.0.1
+still has registry advisories and currently no published patched version.
+The configured collector uses Playwright's installed Chromium directly: it
+does not call Puppeteer's browser downloader or unpack supplied archives.
+Keep this toolchain limited to synthetic local inputs and review the vendor
+patch when available. The unused WebDriver BiDi path also retains its vendor
+Zod 3 dependency; do not force an incompatible Zod major into that protocol
+implementation. The configured Lighthouse collector uses Chrome DevTools
+Protocol. Existing application/library dependency findings remain
+subject to the full package and consumer release gate.
