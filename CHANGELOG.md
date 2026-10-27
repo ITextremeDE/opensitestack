@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add a host-specific `llms.txt` reference route and discovery link, plus a
+  publication-safe curation and maintenance guide using the existing public API.
+
 - Add a configurable rendered reference matrix with axe, reflow and keyboard
   checks, three-run mobile Lighthouse medians, validated throttling, reviewed
   transfer limits and raw CI evidence.
