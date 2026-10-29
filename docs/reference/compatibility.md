@@ -12,7 +12,7 @@ OpenSiteStack 1.x supports the following deliberately narrow platform matrix:
 | Module system | ESM |
 
 The core tests its package and reference application against Node.js 24 and 26,
-Next.js 16.3, and React 19. Consuming repositories may use another supported
+Next.js 16.4, and React 19. Consuming repositories may use another supported
 Next.js 16 minor after their own full `pnpm check` succeeds. The source workspace defaults to `.nvmrc` (Node 26.9.0); CI deliberately tests
 both supported majors with the repository's `packageManager`. Node.js 25 is not
 part of this matrix. The published core API/package remains unchanged.
