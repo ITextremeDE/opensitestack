@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Update the workspace, library development dependency, and basic example to
+  Next.js 16.4.1 with its matching runtime dependencies.
+
 - Pin available patched vendor dependencies in the Lighthouse toolchain;
   document its unused archive-extraction dependency and separate audit boundary.
 
