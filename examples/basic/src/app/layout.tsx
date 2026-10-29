@@ -29,6 +29,7 @@ export default async function RootLayout({
       lang={site.metadata.locale}
       style={createThemeStyle(theme)}
     >
+      <head><link rel="describedby" href="/llms.txt" type="text/plain" /></head>
       <body>
         <script
           type="application/ld+json"

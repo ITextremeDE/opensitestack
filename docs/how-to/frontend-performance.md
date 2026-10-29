@@ -22,6 +22,11 @@ browser preference policy.
   simple choices and native disclosure/dialog elements where appropriate.
   Preserve focus visibility, Escape, tab behavior and focus return. A UI
   dependency should earn its initial bundle and hydration cost.
+- Keep pure CSS-variant helpers in a module separate from interactive UI
+  primitives. A link that only needs class names should not import a component
+  module that also imports a browser runtime. Preserve the component's public
+  API with a compatibility re-export if needed, and measure the production
+  bundle rather than assuming the bundler removed unused client boundaries.
 - Prioritize the actual LCP image and use responsive sizes/quality. CSS
   backgrounds discovered late may benefit from a page-specific image preload.
   Avoid preloading legal-page or below-fold media on every route.
