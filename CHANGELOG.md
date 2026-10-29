@@ -27,6 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Resolve the remaining dependency advisories with patched Zod, Vitest/Vite,
+  brace expansion and source-map dependencies. Replace Lighthouse's browser
+  dependency graph with the official Puppeteer 25.16.0 release while retaining
+  Lighthouse 12.6.1, its measurement profile and existing budgets.
+- Require Zod 4.6.7 for consumers and cover early rejection of oversized form
+  collections without invoking the delivery provider.
+
 - Update the workspace, library development dependency, and basic example to
   Next.js 16.4.1 with its matching runtime dependencies.
 

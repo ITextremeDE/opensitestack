@@ -330,6 +330,27 @@ describe("analytics adapters", () => {
 });
 
 describe("server form adapters", () => {
+  it.each([
+    { schema: z.array(z.string()).max(2), input: Array(10_000).fill(42), valid: ["hello"] },
+    { schema: z.set(z.string()).max(2), input: new Set(Array.from({ length: 10_000 }, (_, i) => i)), valid: new Set(["hello"]) },
+  ])("rejects oversized collections before accumulating element errors", async ({ schema, input, valid }) => {
+    const submit = vi.fn(async ({ value }: { value: unknown }) => value);
+    const formAdapter: ServerFormAdapter<unknown, unknown> = {
+      id: "contact-delivery",
+      schema,
+      submit,
+    };
+    const options = { site: integratedSite, formId: "contact", adapter: formAdapter };
+    const result = await submitSiteForm({ ...options, input });
+    expect(result).toMatchObject({ ok: false, issues: [{ code: "too_big" }] });
+    if (result.ok) throw new Error("Oversized collection was accepted");
+    expect(result.issues).toHaveLength(1);
+    expect(submit).not.toHaveBeenCalled();
+
+    await expect(submitSiteForm({ ...options, input: valid })).resolves.toEqual({ ok: true, value: valid });
+    expect(submit).toHaveBeenCalledExactlyOnceWith({ site: integratedSite, formId: "contact", value: valid });
+  });
+
   const schema = z.object({
     email: z.email(),
     message: z.string().trim().min(3).max(500),

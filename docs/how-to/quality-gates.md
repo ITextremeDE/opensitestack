@@ -97,13 +97,22 @@ not validate a real provider SDK or the full third-party performance cost.
 
 Run `pnpm audit` separately from rendered acceptance; a passing page budget is
 not a clean dependency audit. The workspace pins patched vendor dependencies
-for the Lighthouse CLI where available. Its transitive `extract-zip` 2.0.1
-still has registry advisories and currently no published patched version.
-The configured collector uses Playwright's installed Chromium directly: it
-does not call Puppeteer's browser downloader or unpack supplied archives.
-Keep this toolchain limited to synthetic local inputs and review the vendor
-patch when available. The unused WebDriver BiDi path also retains its vendor
-Zod 3 dependency; do not force an incompatible Zod major into that protocol
-implementation. The configured Lighthouse collector uses Chrome DevTools
-Protocol. Existing application/library dependency findings remain
-subject to the full package and consumer release gate.
+for the Lighthouse CLI, linting, source maps and test tooling. The library
+requires Zod 4.6.7 or later in the same major; bounded form collections have
+regression coverage for rejection before element-error accumulation.
+
+Lighthouse stays at 12.6.1 with the existing measurement profile and budgets.
+A scoped `lighthouse>puppeteer-core` override selects the official 25.16.0
+release, whose complete browser dependency graph removes `extract-zip` and
+uses a Zod-4-compatible BiDi implementation. Lighthouse CI's `proxy-agent`
+dependency is scoped to 8.0.1 to satisfy the new browser helper's optional peer.
+Its fetch wrapper is smoke-tested with `NO_PROXY` against a loopback server.
+These overrides cross Lighthouse's declared
+Puppeteer major, so the actual CDP collector and unchanged budgets must pass
+on both supported Node majors before merging changes to this boundary.
+Do not replace a nested Zod 3 dependency with Zod 4 on its own.
+
+The collector uses Playwright's installed Chromium through Chrome DevTools
+Protocol. Keep this toolchain limited to synthetic local inputs. A passing
+workspace audit describes this resolved lockfile; published packages and
+consuming sites need their own dependency resolution and release checks.
