@@ -49,7 +49,9 @@ investigate any package without a recognized license before release.
 
 1. Confirm versions, changelog date, clean release diff, and consumer evidence.
 2. Commit and push the validated source.
-3. Publish `packages/opensitestack` with public access.
+3. Publish the exact inspected archive from `packages/opensitestack` with public
+   access. Download the registry archive and compare its integrity with the
+   tested candidate; a metadata response alone does not prove installability.
 4. Create the matching signed or annotated Git tag and GitHub release.
 5. Install the exact registry version in each selected consumer and rerun its
    checks before deployment.
