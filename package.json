@@ -1,6 +1,6 @@
 {
   "name": "opensitestack-workspace",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.21.0",
@@ -13,7 +13,7 @@
     "check": "pnpm lint && pnpm test && pnpm test:quality && pnpm validate:docs && pnpm build:package && pnpm --filter @opensitestack/example-basic validate:content && pnpm typecheck && pnpm --filter @opensitestack/example-basic build",
     "dev": "pnpm --filter @opensitestack/example-basic dev",
     "lint": "eslint .",
-    "release:check": "pnpm check && pnpm audit --audit-level=low && pnpm --filter opensitestack pack --dry-run",
+    "release:check": "pnpm check && pnpm audit --audit-level=low && pnpm --filter opensitestack exec npm pack --dry-run",
     "test": "pnpm --filter opensitestack test",
     "validate:docs": "node scripts/validate-docs.mjs",
     "typecheck": "pnpm -r typecheck",

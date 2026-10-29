@@ -9,7 +9,7 @@ configuration, single-level shared-content inheritance, and Next.js request
 integration. Each consuming repository keeps its own design, content,
 components, deployment configuration, and credentials.
 
-> Status: OpenSiteStack 1.0.0 is released. The documented v1 public API is
+> Status: OpenSiteStack 1.0.4 provides the stable v1 API. The documented v1 public API is
 > stable under Semantic Versioning.
 
 ## Principles

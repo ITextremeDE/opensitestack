@@ -8,7 +8,7 @@
 - npm integrity: `sha512-1zOqnoil4g4HIv0YQQSn3X9CF3PjtC8m5dDiSpc4db7Ww1VhokqHZuUd/n83ecUqVIu5iEpU9JHIApASHjcPuw==`
 - Runtime: Node.js 24.18.1, pnpm 11.21.0
 
-The npm registry exposes 1.0.1 as `latest`. Annotated tag `v1.0.1` and the
+At publication on 2026-08-25, the npm registry exposed 1.0.1 as `latest`. Annotated tag `v1.0.1` and the
 non-draft GitHub release both identify the published source release.
 
 ## Package gate

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-10-29
+
 ### Added
 
 - Add a host-specific `llms.txt` reference route and discovery link, plus a
@@ -23,7 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Test the source workspace/reference on Node 24 and 26; default development to
   Node 26.9.0 and document pnpm setup without assuming bundled Corepack.
-- Keep the published core API and npm package unchanged for this tooling work.
+- Keep the v1 public API stable; raise the package Zod dependency floor to
+  `^4.6.7`. Repository-only quality tooling is not part of the npm tarball.
 
 ### Fixed
 
@@ -37,10 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the workspace, library development dependency, and basic example to
   Next.js 16.4.1 with its matching runtime dependencies.
 
-- Pin available patched vendor dependencies in the Lighthouse toolchain;
-  document its unused archive-extraction dependency and separate audit boundary.
-
 - Correct muted-text contrast in the Alpha reference theme.
+- Correct version, API-entry-point and release-evidence documentation.
 
 - Align the library development dependency with Next.js 16.3.8 while preserving
   the verified transitive dependency baseline and release-age policy.
@@ -142,7 +143,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated validation of local Markdown links as part of `pnpm check`.
 - Initial architecture, contribution, security, and release documentation.
 
-[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/ITextremeDE/opensitestack/compare/v1.0.0...v1.0.1
