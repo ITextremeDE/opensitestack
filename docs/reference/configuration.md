@@ -1,8 +1,7 @@
 # Configuration reference
 
 This reference describes the public configuration and file contracts currently
-implemented by OpenSiteStack. The API is pre-1.0 and may change between minor
-versions.
+implemented by OpenSiteStack. The documented v1 API is stable under Semantic Versioning.
 
 ## Site registry
 

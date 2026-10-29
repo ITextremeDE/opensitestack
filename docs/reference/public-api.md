@@ -1,6 +1,6 @@
 # Public API reference
 
-OpenSiteStack 1.x exposes three supported entry points.
+OpenSiteStack 1.x exposes four supported entry points.
 
 ## `opensitestack`
 

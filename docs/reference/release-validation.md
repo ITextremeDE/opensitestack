@@ -39,7 +39,8 @@ consumer failure blocks publication until fixed or explicitly removed from the
 supported matrix.
 
 The current candidate evidence is recorded in
-[OpenSiteStack 1.0.1 release evidence](release-evidence-1.0.1.md).
+[OpenSiteStack 1.0.4 release evidence](release-evidence-1.0.4.md).
+Earlier release evidence remains a historical record of that release.
 
 Review production dependency licenses with `pnpm licenses list --prod` and
 investigate any package without a recognized license before release.
