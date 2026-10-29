@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add a host-specific `llms.txt` reference route and discovery link, plus a
   publication-safe curation and maintenance guide using the existing public API.
-
 - Add a configurable rendered reference matrix with axe, reflow and keyboard
   checks, three-run mobile Lighthouse medians, validated throttling, reviewed
   transfer limits and raw CI evidence.
@@ -36,20 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Lighthouse 12.6.1, its measurement profile and existing budgets.
 - Require Zod 4.6.7 for consumers and cover early rejection of oversized form
   collections without invoking the delivery provider.
-
 - Update the workspace, library development dependency, and basic example to
   Next.js 16.4.1 with its matching runtime dependencies.
-
 - Correct muted-text contrast in the Alpha reference theme.
 - Correct version, API-entry-point and release-evidence documentation.
-
-- Align the library development dependency with Next.js 16.3.8 while preserving
-  the verified transitive dependency baseline and release-age policy.
-
-- Update the basic example to Next.js 16.3.8 and refresh its lockfile.
-
-- Align the library development dependency with the patched Next.js 16.3.3
-  example and refresh vulnerable transitive sharp and js-yaml packages.
 
 ## [1.0.3] - 2026-08-25
 
